@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const dataUrl = '/data/site.json';
+  const dataUrl = './data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'<','>':'>',"'":'&#39;','"':'"'}[c]));
@@ -118,7 +118,7 @@
     return response.json();
   }).then(async data => {
     try {
-      const galleryResponse = await fetch('/api/gallery');
+      const galleryResponse = await fetch('./api/gallery');
       if (galleryResponse.ok) {
         const gallery = await galleryResponse.json();
         if (Array.isArray(gallery.images) && gallery.images.length) {
@@ -691,7 +691,7 @@
     function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><p>${escape(data.curriculum.summary)}</p></div><div class="eyfs">${data.curriculum.areas.map((area, index) => `<div><span>${['♥','★','✦','●','◎','✿','○'][index]}</span>${escape(area)}</div>`).join('')}</div>`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('Learning Stages for Every Age', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${escape(level.image)}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
+      return section('Learning Stages for Every Age', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="./levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${escape(level.image)}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
@@ -1061,7 +1061,7 @@
         const payload = new FormData(form);
         payload.set('admissionSource', sourceField?.value || getAdmissionSource());
         try {
-          const response = await fetch('/api/admission', {
+          const response = await fetch('./api/admission', {
             method: 'POST',
             body: payload
           });
