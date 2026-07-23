@@ -50,7 +50,7 @@
     '': ['kite', 'star']
   };
 
-  /* ─── Robust Fallback Data for Local Testing (Bypasses 404 Error) ─── */
+  /* ─── Robust Fallback Data for Local Testing (Using Beautiful Image URLs) ─── */
   const fallbackSiteData = {
     school: {
       portalUrl: '#',
@@ -61,12 +61,13 @@
       email: 'hello@kindervale.edu.pk'
     },
     images: {
-      logo: 'data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="%23FFD54F"/><text x="50" y="65" font-family="Arial" font-size="40" fill="white" text-anchor="middle">KV</text></svg>',
-      founder: 'data:image/svg+xml;utf8,<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="400" fill="%23CE93D8"/><text x="200" y="210" font-family="Arial" font-size="40" fill="white" text-anchor="middle">Founder</text></svg>',
+      logo: 'https://placehold.co/200x200/FFD54F/ffffff?text=KV',
+      founder: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=400&q=80',
       gallery: [
-        { src: 'data:image/svg+xml;utf8,<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="400" fill="%239DDcFF"/><text x="300" y="210" font-family="Arial" font-size="60" fill="white" text-anchor="middle">Learning</text></svg>', title: 'Learning', category: 'Classrooms', featured: true },
-        { src: 'data:image/svg+xml;utf8,<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="400" fill="%23FF9EC4"/><text x="300" y="210" font-family="Arial" font-size="60" fill="white" text-anchor="middle">Art Time</text></svg>', title: 'Art Time', category: 'Art & Creativity', featured: true },
-        { src: 'data:image/svg+xml;utf8,<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="400" fill="%23B9F5D0"/><text x="300" y="210" font-family="Arial" font-size="60" fill="white" text-anchor="middle">Playground</text></svg>', title: 'Playground', category: 'Outdoor Play', featured: true }
+        { src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80', title: 'Learning', category: 'Classrooms', featured: true },
+        { src: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=600&q=80', title: 'Art Time', category: 'Art & Creativity', featured: true },
+        { src: 'https://images.unsplash.com/photo-1595054225437-b677a29e2467?auto=format&fit=crop&w=600&q=80', title: 'Playground', category: 'Outdoor Play', featured: true },
+        { src: 'https://images.unsplash.com/photo-1588514751410-f1c5040f70db?auto=format&fit=crop&w=600&q=80', title: 'Friends', category: 'Daily Life', featured: false }
       ]
     },
     about: [
@@ -87,15 +88,15 @@
       areas: ['Communication & Language', 'Physical Development', 'Personal & Social', 'Literacy', 'Mathematics', 'Expressive Arts', 'Understanding the World']
     },
     levels: [
-      { slug: 'playgroup', name: 'Playgroup', image: 'data:image/svg+xml;utf8,<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="%23FFD54F"/><text x="200" y="160" font-family="Arial" font-size="40" fill="white" text-anchor="middle">Playgroup</text></svg>', age: '2 - 3 Years', timings: '8:30 AM - 12:30 PM', overview: 'A gentle introduction to a structured learning environment.', curriculum: 'Play-based activities designed to build sensory and motor skills.', objectives: ['Social Interaction', 'Basic Motor Skills'], activities: ['Storytime', 'Finger Painting', 'Singing'] },
-      { slug: 'nursery', name: 'Nursery', image: 'data:image/svg+xml;utf8,<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="%23FF9EC4"/><text x="200" y="160" font-family="Arial" font-size="40" fill="white" text-anchor="middle">Nursery</text></svg>', age: '3 - 4 Years', timings: '8:00 AM - 1:00 PM', overview: 'Building early independence and academic foundations.', curriculum: 'EYFS aligned foundational concepts.', objectives: ['Alphabet Recognition', 'Number Sense'], activities: ['Phonics', 'Basic Math Games', 'Crafts'] }
+      { slug: 'playgroup', name: 'Playgroup', image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=400&q=80', age: '2 - 3 Years', timings: '8:30 AM - 12:30 PM', overview: 'A gentle introduction to a structured learning environment.', curriculum: 'Play-based activities designed to build sensory and motor skills.', objectives: ['Social Interaction', 'Basic Motor Skills'], activities: ['Storytime', 'Finger Painting', 'Singing'] },
+      { slug: 'nursery', name: 'Nursery', image: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=400&q=80', age: '3 - 4 Years', timings: '8:00 AM - 1:00 PM', overview: 'Building early independence and academic foundations.', curriculum: 'EYFS aligned foundational concepts.', objectives: ['Alphabet Recognition', 'Number Sense'], activities: ['Phonics', 'Basic Math Games', 'Crafts'] }
     ],
     events: ['Sports Gala', 'Spring Carnival', 'Annual Art Show', 'Graduation Ceremony'],
     facilities: ['Colorful Indoor Play Area', 'Child-Friendly Library', 'Creative Art Studio', 'Secure Outdoor Playground'],
     team: [
-      { name: 'Sarah Ahmed', role: 'Lead Coordinator', photo: '' },
-      { name: 'Ayesha Khan', role: 'Senior Teacher', photo: '' },
-      { name: 'Zainab Ali', role: 'Art Instructor', photo: '' }
+      { name: 'Sarah Ahmed', role: 'Lead Coordinator', photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80' },
+      { name: 'Ayesha Khan', role: 'Senior Teacher', photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80' },
+      { name: 'Zainab Ali', role: 'Art Instructor', photo: 'https://images.unsplash.com/photo-1531123897727-8f129e1bfa82?auto=format&fit=crop&w=150&q=80' }
     ],
     fees: {
       year: '2026-2027',
@@ -112,7 +113,6 @@
     }
   };
 
-  /* Robust fetch that falls back to the mock data above if a 404 occurs */
   fetch(dataUrl).then(response => {
     if (!response.ok) throw new Error('Unable to load site content (404)');
     return response.json();
@@ -139,7 +139,7 @@
     start(data);
   }).catch(error => {
     console.warn('Network fetch failed. Rendering with magical fallback mock data:', error);
-    start(fallbackSiteData); // THIS SAVES THE DAY
+    start(fallbackSiteData); // Gracefully handles 404
   });
 
   function start(data) {
@@ -598,7 +598,7 @@
     
     const sectionTheme = id => `theme-${id || 'story'}`;
 
-    /* ─── Magical Preschool Dynamic Decorations Injector ─── */
+    /* ─── Magical Preschool Dynamic Decorations Injector (Fixed Emoji Toys) ─── */
     const magicalDecor = (id) => {
       let scenery = '';
       let characters = '';
@@ -687,11 +687,11 @@
       return `<section class="pad theme-about" id="about">${magicalDecor('about')}${sectionDecor('about')}<div class="container" style="position:relative; z-index:10;"><div class="about-layout"><div class="about-images"><figure class="about-image"><img src="${escape(firstImage.thumbnail || firstImage.src || data.images.logo)}" alt="${escape(firstImage.title || 'Kindervale classroom activity')}" loading="lazy" decoding="async"></figure><figure class="about-image"><img src="${escape(secondImage.thumbnail || secondImage.src || data.images.logo)}" alt="${escape(secondImage.title || 'Kindervale learning activity')}" loading="lazy" decoding="async"></figure></div><div class="about-copy"><h2>About Us</h2><p>${aboutText(data.about[0])}</p><p>${aboutText(data.about[1])}</p></div></div></div></section>`;
     }
     function missionVision() { return section('Our Purpose', 'Mission, Vision & Values', `<div class="cards" data-mobile-collapse>${textCard('Our Mission', data.mission)}${textCard('Our Vision', data.vision)}${textCard('Our Values', data.values.slice(0, 3).join(' '))}</div><div class="panel" style="margin-top:24px" data-mobile-collapse><h3>Values in practice</h3><ul>${data.values.map(value => `<li>${escape(value)}</li>`).join('')}</ul></div>`, 'mission-vision'); }
-    function founder() { return section(' ', "Founder's Message", `<div class="two-col"><div class="panel" data-mobile-collapse><img src="${data.images.founder}" alt="${escape(data.founder.name)}, ${escape(data.founder.title)}" loading="lazy" decoding="async" style="width:100%;border-radius:14px;margin-bottom:16px"><h3>${escape(data.founder.name)}</h3><p class="desc">${escape(data.founder.title)}</p><div data-expandable-text>${data.founder.career.map(p => `<p style="margin-top:14px">${escape(p)}</p>`).join('')}</div></div><div class="panel founder-message" data-mobile-collapse><h3>Dear Parents,</h3><div class="founder-message-content" id="founder-message-content" data-expandable-text>${data.founder.message.map(p => `<p style="margin-bottom:14px">${escape(p)}</p>`).join('')}<p><strong>${escape(data.founder.name)}</strong></p></div></div></div>`, 'founder'); }
+    function founder() { return section(' ', "Founder's Message", `<div class="two-col"><div class="panel" data-mobile-collapse><img src="${escape(data.images.founder)}" alt="${escape(data.founder.name)}, ${escape(data.founder.title)}" loading="lazy" decoding="async" style="width:100%;border-radius:14px;margin-bottom:16px"><h3>${escape(data.founder.name)}</h3><p class="desc">${escape(data.founder.title)}</p><div data-expandable-text>${data.founder.career.map(p => `<p style="margin-top:14px">${escape(p)}</p>`).join('')}</div></div><div class="panel founder-message" data-mobile-collapse><h3>Dear Parents,</h3><div class="founder-message-content" id="founder-message-content" data-expandable-text>${data.founder.message.map(p => `<p style="margin-bottom:14px">${escape(p)}</p>`).join('')}<p><strong>${escape(data.founder.name)}</strong></p></div></div></div>`, 'founder'); }
     function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><p>${escape(data.curriculum.summary)}</p></div><div class="eyfs">${data.curriculum.areas.map((area, index) => `<div><span>${['♥','★','✦','●','◎','✿','○'][index]}</span>${escape(area)}</div>`).join('')}</div>`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('Learning Stages for Every Age', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
+      return section('Learning Stages for Every Age', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${escape(level.image)}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
