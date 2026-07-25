@@ -1,11 +1,23 @@
 (() => {
   'use strict';
 
-  const dataUrl = '/data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'<','>':'>',"'":'&#39;','"':'"'}[c]));
-  const homePath = location.pathname.endsWith('kindervale.html') ? location.pathname : '/';
+  /* ─── Auto-detect base path for GitHub Pages subdirectory deploy ─── */
+  const __BASE = (() => {
+    const path = location.pathname;
+    // If served from a subdirectory like /kindervale/, extract the base
+    const match = path.match(/^(\/[^/]+)\/(?:index\.html)?$/);
+    if (match) return match[1];
+    // If running at root, base is empty
+    if (path === '/' || path.endsWith('index.html')) return '';
+    // Fallback: if kindervale.html is in a subdirectory
+    if (path.includes('kindervale.html')) return path.replace('/kindervale.html', '');
+    return '';
+  })();
+  const dataUrl = __BASE ? `${__BASE}/data/site.json` : '/data/site.json';
+  const homePath = __BASE ? __BASE + '/' : (location.pathname.endsWith('kindervale.html') ? location.pathname : '/');
   let activeObserver;
   let lastHomeScroll = Number(sessionStorage.getItem('kindervale:lastHomeScroll') || 0);
   let currentAdmissionSource = 'General Admissions';
@@ -50,12 +62,12 @@
     '': ['kite', 'star']
   };
 
-  fetch(dataUrl).then(response => {
+fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => {
     if (!response.ok) throw new Error('Unable to load site content');
     return response.json();
   }).then(async data => {
     try {
-      const galleryResponse = await fetch('/api/gallery');
+      const galleryResponse = await fetch(__BASE ? `${__BASE}/api/gallery` : '/api/gallery');
       if (galleryResponse.ok) {
         const gallery = await galleryResponse.json();
         if (Array.isArray(gallery.images) && gallery.images.length) {
@@ -754,7 +766,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
     function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><h3 style="font-size:30px">Early Years Foundation Stage<br></h3><p>${escape(data.curriculum.summary)}</p></div><h3 style="font-size:31px; text-align:center;">Area's of Development<br><br></h3><div class="eyfs">${data.curriculum.areas.map((area, index) => `<div><span>${['♥','★','✦','●','◎','✿','○'][index]}</span>${escape(area)}</div>`).join('')}</div>`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
+      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="${__BASE ? __BASE + '/' : '/'}levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
@@ -858,7 +870,9 @@ main section.pad .level:hover img{transform:scale(1.035)}
 
     function render(path = location.pathname, options = {}) {
       if (activeObserver) activeObserver.disconnect();
-      const clean = path === '/kindervale.html' ? '/' : path.replace(/\/$/, '') || '/';
+      /* Strip __BASE prefix to match routes cleanly */
+      const stripped = __BASE && path.startsWith(__BASE) ? path.replace(__BASE, '') || '/' : path;
+      const clean = stripped === '/kindervale.html' ? '/' : stripped.replace(/\/$/, '') || '/';
       const level = data.levels.find(item => `/levels/${item.slug}` === clean);
       const content = level ? levelPage(level) : home();
       setAdmissionSource(level ? level.name : 'General Admissions');
@@ -1135,7 +1149,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
         const payload = new FormData(form);
         payload.set('admissionSource', sourceField?.value || getAdmissionSource());
         try {
-          const response = await fetch('/api/admission', {
+          const response = await fetch(__BASE ? `${__BASE}/api/admission` : '/api/admission', {
             method: 'POST',
             body: payload
           });
@@ -1168,7 +1182,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
 
    function levelPage(level) {
   const galleryItems = data.images.gallery.slice(0, 3);
-  return `${hero(level.name.toUpperCase(), 'PROGRAMME', `Age ${level.age}`, true, level.name)}${section(level.name, 'Overview', `<div class="two-col"><article class="panel" data-mobile-collapse><h3>Overview</h3><p>${escape(level.overview)}</p><h3 style="margin-top:20px">Age group</h3><p>${escape(level.age)}</p><h3 style="margin-top:20px">Timings</h3><p>${escape(level.timings)}</p></article><article class="panel" data-mobile-collapse><h3 style="margin-top:20px">Learning objectives</h3><ol>${level.objectives.map(item => `<li>${escape(item)}</li>`).join('')}</ol></article></div><div class="gallery" style="margin-top:34px">${galleryItems.map(entry => `<figure class="gcircle"><figcaption>${escape(entry.title)}</figcaption></figure>`).join('')}</div><div class="strip"><div style="position:relative;z-index:2"><h2>Interested in ${escape(level.name)}?</h2><p>Book a tour or access the admission form to take the next step.</p><button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(level.name)}">Admissions</button></div></div><br><br><div class="panel"><p><a href="${homePath}#levels" data-back-home class="btn btn-primary">Back to homepage</a></p></div>`)}${footer()}`;
+  return `${hero(level.name.toUpperCase(), 'PROGRAMME', `Age ${level.age}`, true, level.name)}${section(level.name, 'Overview', `<div class="two-col"><article class="panel" data-mobile-collapse><h3>Overview</h3><p>${escape(level.overview)}</p><h3 style="margin-top:20px">Age group</h3><p>${escape(level.age)}</p><h3 style="margin-top:20px">Timings</h3><p>${escape(level.timings)}</p></article><article class="panel" data-mobile-collapse><h3 style="margin-top:20px">Learning objectives</h3><ol>${level.objectives.map(item => `<li>${escape(item)}</li>`).join('')}</ol></article></div><div class="gallery" style="margin-top:34px">${galleryItems.map(entry => `<figure class="gcircle"><figcaption>${escape(entry.title)}</figcaption></figure>`).join('')}</div><div class="strip"><div style="position:relative;z-index:2"><h2>Interested in ${escape(level.name)}?</h2><p>Book a tour or access the admission form to take the next step.</p><button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(level.name)}">Admissions</button></div></div><br><br><div class="panel"><p><a href="${__BASE ? __BASE + '/' : '/'}#levels" data-back-home class="btn btn-primary">Back to homepage</a></p></div>`)}${footer()}`;
 }
 
     document.addEventListener('click', event => {
@@ -1180,30 +1194,39 @@ main section.pad .level:hover img{transform:scale(1.035)}
         event.preventDefault();
         lastHomeScroll = window.scrollY;
         sessionStorage.setItem('kindervale:lastHomeScroll', String(lastHomeScroll));
-        history.pushState({level: true}, '', route.getAttribute('href'));
+        const href = route.getAttribute('href');
+        /* If __BASE is set, store the path minus __BASE so history is cleaner */
+        const pushPath = __BASE && href.startsWith(__BASE) ? href : href;
+        history.pushState({level: true}, '', pushPath);
         render();
         return;
       }
       if (back) {
         event.preventDefault();
-        history.pushState({}, '', `${homePath}#levels`);
-        render(location.pathname, {restoreScroll: true, instant: true});
+        history.pushState({}, '', `${__BASE || ''}/#levels`);
+        render(undefined, {restoreScroll: true, instant: true});
         return;
       }
       if (scroll) {
         event.preventDefault();
         const hash = `#${scroll.dataset.scrollTarget}`;
-        const clean = location.pathname.replace(/\/$/, '') || '/';
-        if (clean !== '/' && clean !== '/kindervale.html') {
-          history.pushState({}, '', `${homePath}${hash}`);
-          render(homePath, {instant: true});
+        /* check if on a level page or sub-path, go home first */
+        const cleanPath = (__BASE && location.pathname.startsWith(__BASE)) ? location.pathname.replace(__BASE, '') || '/' : location.pathname;
+        const isRoot = cleanPath === '/' || cleanPath === '/kindervale.html';
+        if (!isRoot) {
+          history.pushState({}, '', `${__BASE || ''}${hash}`);
+          render(undefined, {instant: true});
         } else {
-          history.pushState({}, '', `${homePath}${hash}`);
+          history.pushState({}, '', `${__BASE || ''}${hash}`);
           scrollToHash(hash);
         }
       }
     });
-    window.addEventListener('popstate', () => render(location.pathname, {restoreScroll: !location.pathname.startsWith('/levels'), instant: true}));
+    window.addEventListener('popstate', () => {
+      const path = location.pathname;
+      const checkLevel = __BASE && path.startsWith(__BASE) ? path.replace(__BASE, '') : path;
+      render(path, {restoreScroll: !checkLevel.startsWith('/levels'), instant: true});
+    });
     window.addEventListener('scroll', updateNavbarState, {passive: true});
     window.addEventListener('resize', () => {
       updateNavbarState();
@@ -1211,7 +1234,9 @@ main section.pad .level:hover img{transform:scale(1.035)}
       refreshInfoCardHeights(site);
     }, {passive: true});
     window.addEventListener('beforeunload', () => {
-      if (!location.pathname.startsWith('/levels')) sessionStorage.setItem('kindervale:lastHomeScroll', String(window.scrollY));
+      const path = location.pathname;
+      const checkLevel = __BASE && path.startsWith(__BASE) ? path.replace(__BASE, '') : path;
+      if (!checkLevel.startsWith('/levels')) sessionStorage.setItem('kindervale:lastHomeScroll', String(window.scrollY));
     });
     render(location.pathname, {instant: true});
   }
