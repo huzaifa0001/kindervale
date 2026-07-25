@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const dataUrl = './data/site.json';
+  const dataUrl = '/data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'<','>':'>',"'":'&#39;','"':'"'}[c]));
@@ -17,7 +17,7 @@
     star: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><path d="M50 6 L61 38 L96 38 L67 58 L78 90 L50 70 L22 90 L33 58 L4 38 L39 38 Z" fill="var(--theme-b)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>`,
     flower: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><circle cx="50" cy="30" r="14" fill="var(--theme-c)"/><circle cx="72" cy="50" r="14" fill="var(--theme-a)"/><circle cx="50" cy="70" r="14" fill="var(--theme-b)"/><circle cx="28" cy="50" r="14" fill="var(--theme-d)"/><circle cx="50" cy="50" r="12" fill="#fff"/><circle cx="50" cy="50" r="7" fill="var(--theme-b)"/><rect x="46" y="72" width="8" height="22" rx="4" fill="#7bbf6a"/></svg>`,
     tree: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><rect x="44" y="60" width="12" height="32" rx="4" fill="#8a5a3c"/><circle cx="50" cy="38" r="26" fill="var(--theme-d)"/><circle cx="30" cy="48" r="18" fill="var(--theme-c)"/><circle cx="70" cy="48" r="18" fill="var(--theme-a)"/></svg>`,
-    alphaBlock: (letter = 'A') => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><rect x="14" y="14" width="72" height="72" rx="16" fill="var(--theme-b)" stroke="#fff" stroke-width="4"/><text x="50" y="66" font-family="Georgia,'Times New Roman',serif" font-size="46" font-weight="700" fill="#fff" text-anchor="middle">${letter}</text></svg>`,
+    alphaBlock: (letter = 'A') => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><rect x="14" y="14" width="72" height="72" rx="16" fill="var(--theme-b)" stroke="#fff" stroke-width="4"/><text x="50" y="66" font-family="Quincy CF,Georgia,'Times New Roman',serif" font-size="46" font-weight="400" fill="#fff" text-anchor="middle">${letter}</text></svg>`,
     pencil: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><g transform="rotate(45 50 50)"><rect x="34" y="10" width="32" height="62" rx="4" fill="var(--theme-a)"/><path d="M34 72 L66 72 L50 92 Z" fill="#e8b98a"/><path d="M44 84 L56 84 L50 92 Z" fill="#4a4a4a"/><rect x="34" y="10" width="32" height="12" rx="4" fill="var(--theme-c)"/></g></svg>`,
     puzzle: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><path d="M20 20 H45 C45 12 55 12 55 20 H80 V45 C88 45 88 55 80 55 V80 H55 C55 88 45 88 45 80 H20 V55 C12 55 12 45 20 45 Z" fill="var(--theme-c)" stroke="#fff" stroke-width="3"/></svg>`,
     toyTrain: () => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="presentation"><rect x="10" y="46" width="36" height="28" rx="6" fill="var(--theme-a)"/><rect x="50" y="34" width="32" height="40" rx="6" fill="var(--theme-b)"/><rect x="58" y="20" width="14" height="18" rx="3" fill="var(--theme-b)"/><circle cx="22" cy="80" r="8" fill="#3a3a3a"/><circle cx="40" cy="80" r="8" fill="#3a3a3a"/><circle cx="62" cy="80" r="8" fill="#3a3a3a"/><circle cx="78" cy="80" r="8" fill="#3a3a3a"/><circle cx="22" cy="80" r="3" fill="#fff"/><circle cx="40" cy="80" r="3" fill="#fff"/><circle cx="62" cy="80" r="3" fill="#fff"/><circle cx="78" cy="80" r="3" fill="#fff"/><circle cx="30" cy="58" r="6" fill="#fff"/></svg>`,
@@ -50,75 +50,12 @@
     '': ['kite', 'star']
   };
 
-  /* ─── Robust Fallback Data for Local Testing (Using Beautiful Image URLs) ─── */
-  const fallbackSiteData = {
-    school: {
-      portalUrl: '#',
-      tagline: 'A Magical Place for Early Learning',
-      address: 'DHA-II, Islamabad, Pakistan',
-      phone: '+92 300 0000000',
-      landline: '051 000 0000',
-      email: 'hello@kindervale.edu.pk'
-    },
-    images: {
-      logo: 'https://placehold.co/200x200/FFD54F/ffffff?text=KV',
-      founder: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=400&q=80',
-      gallery: [
-        { src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80', title: 'Learning', category: 'Classrooms', featured: true },
-        { src: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=600&q=80', title: 'Art Time', category: 'Art & Creativity', featured: true },
-        { src: 'https://images.unsplash.com/photo-1595054225437-b677a29e2467?auto=format&fit=crop&w=600&q=80', title: 'Playground', category: 'Outdoor Play', featured: true },
-        { src: 'https://images.unsplash.com/photo-1588514751410-f1c5040f70db?auto=format&fit=crop&w=600&q=80', title: 'Friends', category: 'Daily Life', featured: false }
-      ]
-    },
-    about: [
-      'Welcome to Kindervale. Founded by Ms. Tazeen Raza, our preschool offers a nurturing environment.',
-      "It's a celebration of childhood. We are dedicated to creating well-groomed, compassionate and confident members of the community."
-    ],
-    mission: 'To provide a magical foundation for lifelong learning.',
-    vision: 'Every child discovers their unique potential in a joyful environment.',
-    values: ['Empathy', 'Creativity', 'Joy', 'Curiosity', 'Respect'],
-    founder: {
-      name: 'Ms. Tazeen Raza',
-      title: 'Founder & Principal',
-      career: ['Over 20 years of experience in early childhood education.', 'Passionate about modern holistic teaching methods.'],
-      message: ['Welcome to our magical preschool where imagination takes flight.', 'We look forward to welcoming you and your child.']
-    },
-    curriculum: {
-      summary: 'Our curriculum is designed to balance play and foundational academics.',
-      areas: ['Communication & Language', 'Physical Development', 'Personal & Social', 'Literacy', 'Mathematics', 'Expressive Arts', 'Understanding the World']
-    },
-    levels: [
-      { slug: 'playgroup', name: 'Playgroup', image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=400&q=80', age: '2 - 3 Years', timings: '8:30 AM - 12:30 PM', overview: 'A gentle introduction to a structured learning environment.', curriculum: 'Play-based activities designed to build sensory and motor skills.', objectives: ['Social Interaction', 'Basic Motor Skills'], activities: ['Storytime', 'Finger Painting', 'Singing'] },
-      { slug: 'nursery', name: 'Nursery', image: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=400&q=80', age: '3 - 4 Years', timings: '8:00 AM - 1:00 PM', overview: 'Building early independence and academic foundations.', curriculum: 'EYFS aligned foundational concepts.', objectives: ['Alphabet Recognition', 'Number Sense'], activities: ['Phonics', 'Basic Math Games', 'Crafts'] }
-    ],
-    events: ['Sports Gala', 'Spring Carnival', 'Annual Art Show', 'Graduation Ceremony'],
-    facilities: ['Colorful Indoor Play Area', 'Child-Friendly Library', 'Creative Art Studio', 'Secure Outdoor Playground'],
-    team: [
-      { name: 'Sarah Ahmed', role: 'Lead Coordinator', photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80' },
-      { name: 'Ayesha Khan', role: 'Senior Teacher', photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80' },
-      { name: 'Zainab Ali', role: 'Art Instructor', photo: 'https://images.unsplash.com/photo-1531123897727-8f129e1bfa82?auto=format&fit=crop&w=150&q=80' }
-    ],
-    fees: {
-      year: '2026-2027',
-      items: [['Registration Fee', 'Rs. 15,000'], ['Monthly Tuition', 'Rs. 18,500'], ['Annual Resource Charge', 'Rs. 8,000']],
-      notes: ['Fees are subject to annual review.', 'Security deposit is refundable with 30 days notice.']
-    },
-    admissions: {
-      tour: 'We invite you to experience the magic of Kindervale in person.',
-      officeHours: ['Monday to Thursday: 8:00 AM - 2:00 PM', 'Friday: 8:00 AM - 12:30 PM']
-    },
-    consultancy: {
-      summary: 'Professional guidance for parents to support early childhood development.',
-      services: [['Parental Workshops', 'Monthly interactive sessions.'], ['Behavioral Guidance', 'Expert tips for toddlers.']]
-    }
-  };
-
   fetch(dataUrl).then(response => {
-    if (!response.ok) throw new Error('Unable to load site content (404)');
+    if (!response.ok) throw new Error('Unable to load site content');
     return response.json();
   }).then(async data => {
     try {
-      const galleryResponse = await fetch('./api/gallery');
+      const galleryResponse = await fetch('/api/gallery');
       if (galleryResponse.ok) {
         const gallery = await galleryResponse.json();
         if (Array.isArray(gallery.images) && gallery.images.length) {
@@ -137,10 +74,7 @@
       console.info('Using bundled gallery data.');
     }
     start(data);
-  }).catch(error => {
-    console.warn('Network fetch failed. Rendering with magical fallback mock data:', error);
-    start(fallbackSiteData); // Gracefully handles 404
-  });
+  }).catch(error => console.error(error));
 
   function start(data) {
     const site = $('#site');
@@ -169,9 +103,10 @@
       const s = document.createElement('style');
       s.id = 'kv-base-styles';
       
-      // Original Base CSS
+      // Original Base CSS (Preserving hero, layout, nav exactly)
       s.textContent = `
-        html,body{max-width:100%;overflow-x:hidden}img,svg{max-width:100%}body.modal-open{overflow:hidden}.nav-toggle{display:none}
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
+        html,body{max-width:100%;overflow-x:hidden;font-family:'Montserrat',Arial,sans-serif;font-weight:400}h1,h2,h3,h4,h5,h6,.logo,.brand-title,.brand-sub,.eyebrow{font-family:'Quincy CF',Georgia,'Times New Roman',serif;font-weight:400}img,svg{max-width:100%}body.modal-open{overflow:hidden}.nav-toggle{display:none}
         .playful-band{position:relative;overflow:hidden;background:linear-gradient(180deg,#eaf4fb,#fbfcfd);padding:34px 0 16px}
         .playful-band::before,.playful-band::after{content:"";position:absolute;border-radius:999px;opacity:.45;pointer-events:none}
         .playful-band::before{width:120px;height:120px;background:#fff3dd;left:7%;top:8px}
@@ -193,8 +128,8 @@
         #about .about-copy p{color:var(--teal-dark);font-size:17px;line-height:1.42;margin:0;animation:aboutTextIn .72s ease both}
         #about .about-copy p + p{margin-top:56px;animation-delay:.14s}
         #about .about-copy strong{font-weight:900;color:var(--teal-dark)}
-        .gallery-highlights{--circle:112px;--ring:5px;display:flex;gap:24px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 18px;margin-bottom:26px;scrollbar-width:thin;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
-        .gallery-highlight{appearance:none;background:transparent;border:0;text-align:center;color:var(--navy);font:inherit;font-weight:800;cursor:pointer;min-width:128px;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;outline:0;transition:transform .22s ease,opacity .22s ease}
+        .gallery-highlights{--circle:165px;--ring:5px;display:flex;gap:24px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 18px;margin-bottom:26px;scrollbar-width:thin;text-align:center;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+        .gallery-highlight{appearance:none;background:transparent;border:0;text-align:center;color:var(--navy);font:inherit;font-weight:800;cursor:pointer;min-width:128px;padding:0;display:flex;flex-direction:column;align-items:center;gap:20px;outline:30;transition:transform .22s ease,opacity .22s ease}
         .highlight-cover{width:var(--circle);height:var(--circle);border-radius:999px;padding:var(--ring);background:conic-gradient(from 210deg,var(--yellow),#ffffff,var(--teal));box-shadow:0 10px 30px rgba(31,66,87,.14);margin:0 auto;transition:transform .22s ease,box-shadow .22s ease,filter .22s ease, background .22s ease;scroll-snap-align:start;position:relative}
         .highlight-cover::after{content:"";position:absolute;inset:var(--ring);border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);pointer-events:none}
         .highlight-cover img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.95);display:block;transform:translateZ(0);transition:transform .22s ease,filter .22s ease,opacity .25s ease;opacity:0}
@@ -243,14 +178,15 @@
         .nav:hover{background:rgba(46,90,117,1)}
         .nav-inner{position:relative;z-index:1}
         .nav-links a{transition:color .2s ease,opacity .2s ease,transform .2s ease}
+        .nav-links .nav-cta{background:#f6b41e;color:#10233d!important;border:1px solid rgba(255,255,255,.7);box-shadow:0 8px 18px rgba(0,0,0,.12);backdrop-filter:none;-webkit-backdrop-filter:none}
+        .nav-links .nav-cta:hover{background:#ffd15c;filter:none}
         .btn{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,filter .18s ease}
         .card,.level,.panel{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
-        .card:hover,.level:hover,.panel:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(51,65,92,.12)}
+        .card.is-interactive-surface:hover,.level:hover,.panel.is-interactive-surface:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(51,65,92,.12)}
         .level img,.card img,.panel img{transition:transform .28s ease,opacity .28s ease}
         .team-card{display:flex;align-items:center;gap:18px;min-height:150px}
         .team-photo{width:80px;height:80px;flex:0 0 80px;border-radius:50%;border:1px solid rgba(46,90,117,.16);background:#f1f3f5;color:#8a94a3;display:grid;place-items:center;overflow:hidden;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
         .team-photo img{width:100%;height:100%;display:block;object-fit:cover;border-radius:50%}
-        .team-photo-placeholder{display:grid;place-items:center;width:100%;height:100%}
         .team-info{min-width:0;flex:1}
         .team-card h3,.team-card p{overflow-wrap:anywhere}
         .team-card h3{margin-bottom:8px}
@@ -259,11 +195,11 @@
         .gallery-stage img{grid-column:2;justify-self:center;max-width:min(820px,100%)}
         @keyframes fieldShake{0%{transform:translateX(0)}30%{transform:translateX(-3px)}60%{transform:translateX(3px)}100%{transform:translateX(0)}}
         @keyframes rollGallery{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(-50% - 11px),0,0)}}
-        @media(max-width:1024px){.nav-inner{gap:12px}.nav-toggle{display:inline-flex;width:46px;height:46px;border:1px solid rgba(255,255,255,.24);border-radius:14px;background:rgba(255,255,255,.1);align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;flex:0 0 auto}.nav-toggle span{display:block;width:22px;height:2px;border-radius:2px;background:#fff;transition:transform .22s ease,opacity .22s ease}nav.menu-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}nav.menu-open .nav-toggle span:nth-child(2){opacity:0}nav.menu-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}.nav-links{position:absolute;top:100%;left:0;right:0;display:flex;flex-direction:column;align-items:stretch;gap:0;max-height:0;overflow:hidden;padding:0 22px;background:rgba(46,90,117,.98);box-shadow:0 18px 28px rgba(31,66,87,.2);white-space:normal;transition:max-height .28s ease,padding .28s ease}.nav-links a{font-size:15px;text-align:left;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.12)}.nav-links a.active{color:var(--yellow)}.nav-links .nav-cta{justify-content:center;margin-top:10px;color:#1f4257;border-bottom:0}nav.menu-open .nav-links{max-height:75vh;overflow-y:auto;padding:10px 22px 18px}}
+        @media(max-width:1024px){.nav-inner{gap:12px}.nav-toggle{display:inline-flex;width:46px;height:46px;border:1px solid rgba(255,255,255,.24);border-radius:14px;background:rgba(255,255,255,.1);align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;flex:0 0 auto}.nav-toggle span{display:block;width:22px;height:2px;border-radius:2px;background:#fff;transition:transform .22s ease,opacity .22s ease}nav.menu-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}nav.menu-open .nav-toggle span:nth-child(2){opacity:0}nav.menu-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}.nav-links{position:absolute;top:100%;left:0;right:0;display:flex;flex-direction:column;gap:0;max-height:0;overflow:hidden;padding:0px 0px;background:rgba(46,90,117,.98);box-shadow:0 18px 28px rgba(31,66,87,.2);white-space:normal;transition:max-height .28s ease,padding .28s ease}.nav-links a{font-size:15px;text-align:left;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.12)}.nav-links a.active{color:var(--yellow)}.nav-links .nav-cta{justify-content:center;margin-top:10px;color:#1f4257;border-bottom:0}nav.menu-open .nav-links{max-height:75vh;overflow-y:auto;padding:10px 22px 18px}}
         @media(max-width:880px){.level img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;border:4px solid rgba(255,255,255,.7);margin-bottom:16px}.form-grid{grid-template-columns:1fr}}
         @media(max-width:980px){#about .about-layout{grid-template-columns:minmax(260px,.8fr) minmax(330px,1fr);gap:42px}#about .about-images{grid-template-rows:repeat(2,160px)}#about .about-image{width:160px;height:160px}#about .about-copy p{font-size:16px}}
         @media(max-width:880px){.team-photo{width:70px;height:70px;flex-basis:70px}}
-        @media(max-width:767px){.container{padding:0 16px}.nav-inner{padding:10px 16px}.logo{font-size:14px;letter-spacing:1px;min-width:0}.logo .mark{width:44px;height:44px}.logo small{letter-spacing:4px}.hero{padding:48px 0 105px}.hero-lockup{padding:0 16px}.brand-title{font-size:clamp(34px,12vw,44px);letter-spacing:5px;padding-left:5px;overflow-wrap:anywhere}.brand-sub{font-size:14px;letter-spacing:8px;padding-left:8px}.brand-tag{font-size:16px;gap:10px;line-height:1.35;flex-wrap:wrap;margin-bottom:30px}.brand-tag .ln{width:34px}.hero-cta,.form-actions{align-items:stretch;flex-direction:column}.btn{min-height:44px;justify-content:center;padding:12px 20px}.sec-head{margin-bottom:28px}.sec-head h2{font-size:28px;line-height:1.2}section.pad{padding:48px 0}.cards,.levels,.eyfs,.gallery{grid-template-columns:1fr;gap:18px}.card,.level,.panel{padding:22px}.team-card{gap:16px;min-height:126px}.team-photo{width:60px;height:60px;flex-basis:60px;font-size:11px}.rolling-gallery{gap:14px;animation-duration:28s}.rolling-item{flex-basis:132px}.photo-upload{grid-template-columns:1fr}.photo-preview{width:min(100%,180px);margin:auto}.gallery-highlights{gap:16px;--circle:92px;--ring:5px}.gallery-highlight{min-width:104px;gap:8px}.highlight-label{font-size:13px}.gallery-stage{grid-template-columns:40px minmax(0,1fr) 40px;gap:0;width:100%}.gallery-stage img{max-width:100%;max-height:68vh}.gallery-nav{width:40px;height:40px;font-size:28px}.gcircle img{width:min(68vw,220px);height:min(68vw,220px)}.strip{margin:0;padding:32px 18px;border-radius:20px}.strip h2{font-size:25px}.foot-grid{gap:20px}.admission-modal{padding:12px;align-items:start;overflow:auto}.admission-dialog{width:100%;max-height:none;margin:58px 0 12px;padding:18px;border-radius:16px}.admission-close{top:10px;right:12px}.admission-form fieldset{padding:14px}}
+        @media(max-width:767px){.container{padding:0 16px}.nav-inner{padding:10px 16px}.logo{font-size:14px;letter-spacing:1px;min-width:0}.logo .mark{width:44px;height:44px}.logo small{letter-spacing:4px}.hero{padding:48px 0 105px}.hero-lockup{padding:0 16px}.brand-title{font-size:clamp(34px,12vw,44px);letter-spacing:5px;padding-left:5px;overflow-wrap:anywhere}.brand-sub{font-size:14px;letter-spacing:8px;padding-left:8px}.brand-tag{font-size:16px;gap:10px;line-height:1.35;flex-wrap:wrap;margin-bottom:30px}.brand-tag .ln{width:34px}.hero-cta,.form-actions{align-items:stretch;flex-direction:column}.btn{min-height:44px;justify-content:center;padding:12px 20px}.sec-head{margin-bottom:28px}.sec-head h2{font-size:28px;line-height:1.2}section.pad{padding:48px 0}.cards,.levels,.eyfs,.gallery{grid-template-columns:1fr;gap:18px}.card,.level,.panel{padding:22px}.level img{width:calc(100% + 44px);margin:-22px -22px 16px}.team-card{gap:16px;min-height:126px}.team-photo{width:60px;height:60px;flex-basis:60px;font-size:11px}.rolling-gallery{gap:14px;animation-duration:28s}.rolling-item{flex-basis:132px}.photo-upload{grid-template-columns:1fr}.photo-preview{width:min(100%,180px);margin:auto}.gallery-highlights{gap:16px;--circle:92px;--ring:5px}.gallery-highlight{min-width:104px;gap:8px}.highlight-label{font-size:13px}.gallery-stage{grid-template-columns:40px minmax(0,1fr) 40px;gap:0;width:100%}.gallery-stage img{max-width:100%;max-height:68vh}.gallery-nav{width:40px;height:40px;font-size:28px}.gcircle img{width:min(68vw,220px);height:min(68vw,220px)}.strip{margin:0;padding:32px 18px;border-radius:20px}.strip h2{font-size:25px}.foot-grid{gap:20px}.admission-modal{padding:12px;align-items:start;overflow:auto}.admission-dialog{width:100%;max-height:none;margin:58px 0 12px;padding:18px;border-radius:16px}.admission-close{top:10px;right:12px}.admission-form fieldset{padding:14px}}
         main{background:linear-gradient(180deg,#fbfcfd 0%,#f7fbff 34%,#fffaf0 68%,#fbfcfd 100%)}
         main section.pad{position:relative;overflow:hidden;padding:86px 0;background:radial-gradient(circle at 8% 18%,rgba(246,180,30,.12) 0 52px,transparent 53px),radial-gradient(circle at 92% 12%,rgba(46,90,117,.10) 0 64px,transparent 65px),linear-gradient(180deg,rgba(255,255,255,.74),rgba(234,244,251,.62))}
         main section.pad:nth-of-type(even){background:radial-gradient(circle at 12% 80%,rgba(255,158,196,.12) 0 58px,transparent 59px),radial-gradient(circle at 88% 70%,rgba(57,194,180,.12) 0 68px,transparent 69px),linear-gradient(180deg,rgba(255,250,240,.82),rgba(255,255,255,.9))}
@@ -272,25 +208,26 @@
         main section.pad .container{width:min(100% - 48px,1240px);margin-inline:auto}
         main section.pad .sec-head{position:relative;max-width:780px;margin:0 auto 42px;text-align:center}
         main section.pad .sec-head::after{content:"";display:block;width:min(230px,46vw);height:10px;margin:16px auto 0;border-radius:999px;background:linear-gradient(90deg,var(--yellow),#fff3dd,var(--teal),#e2f8f5)}
-        main section.pad .eyebrow{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(46,90,117,.12);box-shadow:0 8px 20px rgba(31,66,87,.08);padding:7px 14px;color:var(--teal-dark)}
-        main section.pad .eyebrow::before{content:"★";color:var(--yellow);font-size:13px}
+        main section.pad .eyebrow{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(46,90,117,.12);font-size:30px;box-shadow:0 8px 20px rgba(31,66,87,.08);padding:7px 14px;color:var(--teal-dark)}
+        main section.pad .eyebrow::before{content:"★";color:var(--yellow);font-size:25px}
         main section.pad .sec-head h2{font-size:clamp(30px,4vw,48px);line-height:1.12;color:var(--navy);margin-top:14px}
         main section.pad .sec-head p{font-size:clamp(16px,1.7vw,19px);line-height:1.75;color:#5f687c;max-width:760px}
         main section.pad .cards,main section.pad .levels,main section.pad .two-col,main section.pad .eyfs,main section.pad .gallery{align-items:stretch;justify-content:center}
-        main section.pad .cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:26px}
+        main section.pad .cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:15px}
         main section.pad .two-col{gap:30px}
         main section.pad .card,main section.pad .panel{position:relative;overflow:hidden;border:1px solid rgba(46,90,117,.10);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,253,247,.95));box-shadow:0 18px 42px rgba(31,66,87,.11);padding:30px}
         main section.pad .card::before,main section.pad .panel::before{content:"";position:absolute;inset:0 0 auto 0;height:7px;background:linear-gradient(90deg,var(--yellow),#e2f8f5,#fdecf1,var(--teal));opacity:.9}
         main section.pad .card::after,main section.pad .panel::after{content:"";position:absolute;right:18px;bottom:16px;width:46px;height:30px;border-radius:999px;background:rgba(234,244,251,.72);box-shadow:-20px 5px 0 rgba(255,243,221,.8);opacity:.7;pointer-events:none}
-        main section.pad .card:hover,main section.pad .panel:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 24px 54px rgba(31,66,87,.16);border-color:rgba(246,180,30,.38)}
+        main section.pad .card.is-interactive-surface:hover,main section.pad .panel.is-interactive-surface:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 24px 54px rgba(31,66,87,.16);border-color:rgba(246,180,30,.38)}
         main section.pad .card h3,main section.pad .panel h3{color:var(--teal-dark);font-size:clamp(19px,2vw,24px);line-height:1.2}
         main section.pad .card p,main section.pad .panel p,main section.pad .panel li{color:#606a7d;font-size:16px;line-height:1.72}
         main section.pad .panel img{border-radius:24px!important;border:6px solid rgba(255,255,255,.9);box-shadow:0 18px 36px rgba(31,66,87,.16)}
-        main section.pad .level{position:relative;overflow:hidden;min-height:100%;border-radius:30px;padding:26px 22px 30px;box-shadow:0 20px 44px rgba(31,66,87,.16);transition:transform .24s ease,box-shadow .24s ease,filter .24s ease}
-        main section.pad .level::before{content:"";position:absolute;inset:12px;border:2px dashed rgba(255,255,255,.46);border-radius:24px;pointer-events:none}
-        main section.pad .level:hover{transform:translateY(-9px) rotate(-.5deg);box-shadow:0 28px 58px rgba(31,66,87,.22);filter:saturate(1.06)}
-        main section.pad .level img{border-radius:24px;border:6px solid rgba(255,255,255,.78);box-shadow:0 16px 30px rgba(31,66,87,.18)}
-        main section.pad .level:hover img{transform:scale(1.035)}
+        #founder .founder-photo{display:block;width:min(100%,220px);aspect-ratio:4/5;margin:0 auto 18px;border-radius:22px!important;object-fit:cover;object-position:center top}
+        @media(max-width:767px){#founder .founder-photo{width:min(72vw,190px)}}
+       main section.pad .level{position:relative;overflow:hidden;min-height:100%;border-radius:30px;padding:26px 22px 30px;box-shadow:0 20px 44px rgba(31,66,87,.16);transition:transform .24s ease,box-shadow .24s ease,filter .24s ease}
+main section.pad .level:hover{transform:translateY(-9px) rotate(-.5deg);box-shadow:0 28px 58px rgba(31,66,87,.22);filter:saturate(1.06)}
+main section.pad .level img{display:block;width:calc(100% + 44px);max-width:calc(100% + 44px);margin:-26px -22px 20px;border:0;border-radius:0;box-shadow:none;aspect-ratio:4/3;object-fit:cover;transition:transform .28s ease,opacity .28s ease}
+main section.pad .level:hover img{transform:scale(1.035)}
         main section.pad .eyfs div{border-radius:24px;padding:22px 18px;background:linear-gradient(145deg,#fff,#f7fbff);border:1px solid rgba(46,90,117,.10);box-shadow:0 16px 34px rgba(31,66,87,.10);transition:transform .22s ease,box-shadow .22s ease}
         main section.pad .eyfs div:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(31,66,87,.15)}
         main section.pad .gcircle{padding:12px 12px 18px;border-radius:24px;background:#fff;box-shadow:0 16px 34px rgba(31,66,87,.12);transform:rotate(-1deg);transition:transform .24s ease,box-shadow .24s ease}
@@ -305,7 +242,7 @@
         .form-field input,.form-field select,.form-field textarea{border-radius:16px;border-color:rgba(46,90,117,.16)}
         .form-field input:focus,.form-field select:focus,.form-field textarea:focus{transform:translateY(-1px)}
         footer{position:relative;overflow:hidden;background:linear-gradient(145deg,#1f4257,#2e5a75);margin-top:0}
-        footer::before{content:"";position:absolute;left:0;right:0;top:0;height:18px;background:linear-gradient(135deg,transparent 25%,rgba(255,255,255,.16) 25% 50%,transparent 50% 75%,rgba(246,180,30,.28) 75%);background-size:44px 18px}
+        footer::before{content:"";position:absolute;left:0;right:0;top:0;height:0px;background:linear-gradient(135deg,transparent 25%,rgba(255,255,255,.16) 25% 50%,transparent 50% 75%,rgba(246,180,30,.28) 75%);background-size:44px 18px}
         @keyframes kvFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(8deg)}}
         @keyframes kvSoftBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
         @keyframes aboutImageIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
@@ -314,7 +251,7 @@
         @media(max-width:980px){main section.pad{padding:68px 0}main section.pad .two-col{grid-template-columns:1fr}main section.pad .levels{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media(max-width:767px){main section.pad{padding:56px 0}main section.pad .container{width:min(100% - 32px,1240px);padding:0}main section.pad .cards,main section.pad .levels,main section.pad .eyfs,main section.pad .gallery{grid-template-columns:1fr}main section.pad .card,main section.pad .panel{border-radius:24px;padding:24px}main section.pad .sec-head{margin-bottom:30px}#about .about-layout{display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;min-height:0}#about .about-images{display:contents}#about .about-copy{display:contents;max-width:none}#about .about-copy h2{order:1;margin-bottom:30px;font-size:32px}#about .about-image{width:min(66vw,190px);height:min(66vw,190px);margin:0!important}#about .about-image:first-child{order:2}#about .about-copy p:first-of-type{order:3;margin:26px auto 42px;max-width:34rem;font-size:16px;line-height:1.55}#about .about-image:nth-child(2){order:4}#about .about-copy p:nth-of-type(2){order:5;margin:26px auto 0;max-width:34rem;font-size:16px;line-height:1.55}}
         @media(prefers-reduced-motion:reduce){main section.pad::after{animation:none}#about .about-image,#about .about-copy h2,#about .about-copy p{animation:none}main section.pad .card,main section.pad .panel,main section.pad .level,main section.pad .gcircle,main section.pad .btn,.admission-modal .btn{transition:none}}
-        main section.pad{--theme-a:#7dd3fc;--theme-b:#fde68a;--theme-c:#f9a8d4;--theme-d:#99f6e4;font-family:Nunito,Quicksand,"Segoe UI",system-ui,-apple-system,sans-serif;padding:94px 0;background:radial-gradient(circle at 8% 18%,color-mix(in srgb,var(--theme-b) 32%,transparent) 0 52px,transparent 53px),radial-gradient(circle at 92% 12%,color-mix(in srgb,var(--theme-a) 26%,transparent) 0 64px,transparent 65px),linear-gradient(180deg,rgba(255,255,255,.82),color-mix(in srgb,var(--theme-a) 18%,#fff))}
+        main section.pad{--theme-a:#7dd3fc;--theme-b:#fde68a;--theme-c:#f9a8d4;--theme-d:#99f6e4;font-family:'Montserrat',Arial,sans-serif;padding:94px 0;background:radial-gradient(circle at 8% 18%,color-mix(in srgb,var(--theme-b) 32%,transparent) 0 52px,transparent 53px),radial-gradient(circle at 92% 12%,color-mix(in srgb,var(--theme-a) 26%,transparent) 0 64px,transparent 65px),linear-gradient(180deg,rgba(255,255,255,.82),color-mix(in srgb,var(--theme-a) 18%,#fff))}
         main section.pad.theme-about{--theme-a:#9ddcff;--theme-b:#ffe78a;--theme-c:#ff9ec4;--theme-d:#b9f5d0}
         main section.pad.theme-founder{--theme-a:#d8b4fe;--theme-b:#fde68a;--theme-c:#fecdd3;--theme-d:#a7f3d0}
         main section.pad.theme-mission-vision{--theme-a:#b9e8ff;--theme-b:#fff0a8;--theme-c:#fbcfe8;--theme-d:#a7f3d0}
@@ -348,13 +285,24 @@
         main section.pad .card:nth-child(3n+2),main section.pad .panel:nth-child(3n+2){background:linear-gradient(145deg,rgba(255,255,255,.98),color-mix(in srgb,var(--theme-b) 18%,#fff))}
         main section.pad .card:nth-child(3n),main section.pad .panel:nth-child(3n){background:linear-gradient(145deg,rgba(255,255,255,.98),color-mix(in srgb,var(--theme-c) 14%,#fff))}
         main section.pad .card::before,main section.pad .panel::before{background:linear-gradient(90deg,var(--theme-b),var(--theme-d),var(--theme-c),var(--theme-a))}
-        main section.pad .card-icon{position:absolute;right:18px;top:18px;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#fff 0 5px,transparent 6px),conic-gradient(var(--theme-b),var(--theme-c),var(--theme-a),var(--theme-d),var(--theme-b));opacity:.72}
+        main section.pad .card-icon{display:none}
         #gallery .highlight-cover{border-radius:24px;background:linear-gradient(135deg,var(--theme-b),#fff,var(--theme-a));transform:rotate(-2deg)}
         #gallery .gallery-highlight:nth-child(even) .highlight-cover{transform:rotate(2deg)}
         #gallery .highlight-cover img{border-radius:18px;border:5px solid #fff}
         #gallery .highlight-cover::before{content:"";position:absolute;left:50%;top:-7px;width:42px;height:16px;border-radius:4px;background:rgba(255,255,255,.72);transform:translateX(-50%) rotate(-3deg);box-shadow:0 2px 6px rgba(31,66,87,.08);z-index:2}
         #team .team-card{background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--theme-c) 16%,#fff));border-color:color-mix(in srgb,var(--theme-a) 38%,#fff)}
         #team .team-photo{border:5px solid #fff;box-shadow:0 10px 24px rgba(31,66,87,.14);background:linear-gradient(135deg,var(--theme-d),#fff)}
+        #team .team-chart{display:grid;gap:28px;max-width:1120px;margin-inline:auto}
+        #team .team-chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:20px;position:relative}
+        #team .team-chart-row:not(:first-child)::before{content:"";position:absolute;left:50%;top:-22px;width:2px;height:18px;background:rgba(46,90,117,.22)}
+        #team .team-node{min-height:0;text-align:center;padding:24px 20px}
+        #team .team-node h3{margin:0 0 10px;color:var(--teal-dark);font-size:clamp(18px,1.8vw,22px);line-height:1.2}
+        #team .team-node p{margin:0;color:#606a7d;font-size:16px;line-height:1.55}
+        #team .team-node.lead{max-width:340px;margin-inline:auto;background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--theme-c) 22%,#fff))}
+        #team .team-node.group{grid-column:1/-1;text-align:left}
+        #team .team-node.group ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:8px 18px;margin:0;padding-left:20px}
+        #team .team-node.group li{color:#606a7d;line-height:1.55}
+        @media(max-width:767px){#team .team-chart{gap:20px}#team .team-chart-row{gap:16px}#team .team-chart-row::before{display:none}#team .team-node.group{text-align:center}#team .team-node.group ul{display:block;text-align:left}}
         #admissions .panel{border-style:dashed;border-width:2px}
         #admissions .panel::after{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#fff,var(--theme-b));box-shadow:-18px 20px 0 -10px var(--theme-c)}
         footer{background:radial-gradient(circle at 8% 24%,rgba(246,180,30,.22) 0 72px,transparent 73px),radial-gradient(circle at 88% 72%,rgba(255,158,196,.16) 0 82px,transparent 83px),linear-gradient(145deg,#1f4257,#2e5a75)}
@@ -402,15 +350,14 @@
            ✨ MAGICAL PRESCHOOL REDESIGN (SCOPED FROM ABOUT ONWARD)
            ========================================================= */
            
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;700;900&display=swap');
-
         /* Scope new playful fonts ONLY to main content and footer */
         main, footer, .admission-modal {
-          font-family: 'Nunito', 'Quicksand', sans-serif;
+          font-family: 'Montserrat', Arial, sans-serif;
+          font-weight: 400;
         }
         main section.pad h2, main section.pad h3, footer h5 {
-          font-family: 'Fredoka', sans-serif;
-          font-weight: 600;
+          font-family: 'Quincy CF', Georgia, 'Times New Roman', serif;
+          font-weight: 400;
           letter-spacing: 0.5px;
         }
 
@@ -439,7 +386,7 @@
           box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08) !important;
           transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease !important;
         }
-        main section.pad .card:hover, main section.pad .panel:hover {
+        main section.pad .card.is-interactive-surface:hover, main section.pad .panel.is-interactive-surface:hover {
           transform: translateY(-12px) scale(1.03) !important;
           box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12) !important;
           border-color: #FFD54F !important;
@@ -467,7 +414,7 @@
           border-radius: 999px !important;
           background: linear-gradient(135deg, #FFB74D, #FF8A65) !important;
           color: #FFF !important;
-          font-family: 'Fredoka', sans-serif;
+          font-family: 'Montserrat', Arial, sans-serif;
           font-weight: 600;
           border: 3px solid #FFF;
           box-shadow: 0 8px 20px rgba(255, 138, 101, 0.4) !important;
@@ -491,12 +438,38 @@
         .scenery-star { position: absolute; animation: twinkle 3s ease-in-out infinite alternate; }
         
         /* 🧸 Mascots, Kids, and Toys Layer */
-        .character-layer div {
+        .character-layer img {
           position: absolute; z-index: 1; pointer-events: none;
+          filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
+        .kid-bottom-left { bottom: 0; left: 2%; width: 180px; }
+        .kid-bottom-right { bottom: 0; right: 2%; width: 180px; }
+        .mascot-float { top: 15%; right: 8%; width: 120px; animation: kvIllFloat 6s ease-in-out infinite; }
+        .toy-scatter-1 { bottom: 10%; left: 15%; width: 80px; transform: rotate(-15deg); }
+        .toy-scatter-2 { top: 20%; left: 5%; width: 60px; transform: rotate(25deg); }
         
         @keyframes driftClouds { from { transform: translateX(-150px); } to { transform: translateX(120vw); } }
         @keyframes twinkle { 0% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+
+        /* =========================================================
+           📖 READ MORE / READ LESS — reusable info-card component
+           Used by Our Mission / Our Vision / Our Values, and any
+           other short summary card that needs progressive disclosure.
+           ========================================================= */
+        main section.pad .card.kv-info-card{display:flex;flex-direction:column}
+        main section.pad .card.kv-info-card .kv-info-body{position:relative;overflow:hidden;max-height:4.8em;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+        main section.pad .card.kv-info-card .kv-info-body::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.7em;background:linear-gradient(to bottom,rgba(255,255,255,0),var(--kv-info-bg,#fff));opacity:1;transition:opacity .25s ease;pointer-events:none}
+        main section.pad .card.kv-info-card .kv-info-body.is-expanded{overflow:visible}
+        main section.pad .card.kv-info-card .kv-info-body.is-expanded::after{opacity:0}
+        main section.pad .card.kv-info-card .kv-info-preview,main section.pad .card.kv-info-card .kv-info-full p{margin:0}
+        main section.pad .card.kv-info-card .kv-info-full{margin:0}
+        main section.pad .card.kv-info-card .kv-info-full ul{margin:0;padding-left:20px;list-style:disc}
+        main section.pad .card.kv-info-card .kv-info-full li{margin-bottom:8px}
+        main section.pad .card.kv-info-card .kv-info-toggle{display:inline-flex;align-items:center;align-self:flex-start;gap:8px;min-height:44px;margin-top:10px;border:0;background:transparent;color:var(--teal-dark);font:inherit;font-weight:800;padding:8px 0 0;cursor:pointer;outline-offset:4px}
+        main section.pad .card.kv-info-card .kv-info-toggle::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .22s ease}
+        main section.pad .card.kv-info-card .kv-info-toggle[aria-expanded="true"]::after{transform:rotate(225deg)}
+        main section.pad .card.kv-info-card .kv-info-toggle:focus-visible{border-radius:8px;outline:3px solid rgba(246,180,30,.42)}
+        @media(prefers-reduced-motion:reduce){main section.pad .card.kv-info-card .kv-info-body{transition:none}}
       `;
       document.head.appendChild(s);
     }
@@ -536,6 +509,7 @@
       $$(selector, root).forEach((target, index) => {
         if (target.dataset.expandableReady || target.closest('[data-no-expand]')) return;
         if (!target.hasAttribute('data-expandable-text') && target.closest('[data-expandable-text]')) return;
+        if (target.closest('.kv-info-card')) return;
         const plainText = (target.textContent || '').replace(/\s+/g, ' ').trim();
         if (plainText.length < minExpandableCharacters) return;
         const id = target.id || `kv-expand-${Date.now().toString(36)}-${index}`;
@@ -578,15 +552,99 @@
       }, {passive: true});
     }
 
+    /* ─────────────────────────────────────────────────────────
+       📖 Reusable Read More / Read Less info-card component.
+       Renders a short preview by default; expanding swaps in the
+       full content (which may be a paragraph or a bullet list)
+       and smoothly animates the card's height. Used by Mission,
+       Vision and Values today, and safe to reuse for any other
+       short-summary card across the site.
+       ───────────────────────────────────────────────────────── */
+    let kvInfoCardSeq = 0;
+    function truncatePreview(text, limit = 100) {
+      const clean = String(text).replace(/\s+/g, ' ').trim();
+      if (clean.length <= limit) return clean;
+      let cut = clean.slice(0, limit);
+      const lastSpace = cut.lastIndexOf(' ');
+      if (lastSpace > 40) cut = cut.slice(0, lastSpace);
+      return `${cut.trim()}…`;
+    }
+    function infoCard(title, fullContent, {list = false, previewLimit = 100} = {}) {
+      const id = `kv-info-${++kvInfoCardSeq}`;
+      const previewSource = list ? fullContent.join(' ') : fullContent;
+      const previewText = truncatePreview(previewSource, previewLimit);
+      const fullMarkup = list
+        ? `<ul>${fullContent.map(item => `<li>${escape(item)}</li>`).join('')}</ul>`
+        : `<p>${escape(fullContent)}</p>`;
+      return `<article class="card kv-info-card"><span class="card-icon" aria-hidden="true"></span><h3>${escape(title)}</h3><div class="kv-info-body" id="${id}"><p class="kv-info-preview">${escape(previewText)}</p><div class="kv-info-full" hidden>${fullMarkup}</div></div><button type="button" class="kv-info-toggle" aria-expanded="false" aria-controls="${id}" data-info-toggle>Read More</button></article>`;
+    }
+    function wireInfoCards(root = site) {
+      if (root.dataset.infoCardsWired) return;
+      root.dataset.infoCardsWired = 'true';
+
+      root.addEventListener('click', event => {
+        const button = event.target.closest('.kv-info-toggle');
+        if (!button || !root.contains(button)) return;
+        const body = document.getElementById(button.getAttribute('aria-controls'));
+        if (!body) return;
+        const preview = $('.kv-info-preview', body);
+        const full = $('.kv-info-full', body);
+        const card = body.closest('.kv-info-card');
+        if (card) body.style.setProperty('--kv-info-bg', getComputedStyle(card).backgroundColor || '#fff');
+        const isExpanding = button.getAttribute('aria-expanded') !== 'true';
+
+        if (isExpanding) {
+          const collapsedPx = body.getBoundingClientRect().height;
+          body.style.maxHeight = `${collapsedPx}px`;
+          void body.offsetHeight;
+          preview.hidden = true;
+          full.hidden = false;
+          const targetPx = body.scrollHeight;
+          requestAnimationFrame(() => {
+            body.style.maxHeight = `${targetPx}px`;
+            body.classList.add('is-expanded');
+          });
+          button.textContent = 'Read Less';
+          button.setAttribute('aria-expanded', 'true');
+        } else {
+          const currentPx = body.scrollHeight;
+          body.style.maxHeight = `${currentPx}px`;
+          void body.offsetHeight;
+          body.classList.remove('is-expanded');
+          requestAnimationFrame(() => {
+            body.style.maxHeight = '';
+          });
+          button.textContent = 'Read More';
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      root.addEventListener('transitionend', event => {
+        if (event.propertyName !== 'max-height') return;
+        const body = event.target.closest?.('.kv-info-body');
+        if (!body) return;
+        if (!body.classList.contains('is-expanded')) {
+          const preview = $('.kv-info-preview', body);
+          const full = $('.kv-info-full', body);
+          if (preview) preview.hidden = false;
+          if (full) full.hidden = true;
+        }
+      });
+    }
+    function refreshInfoCardHeights(root = site) {
+      $$('.kv-info-body.is-expanded', root).forEach(body => {
+        body.style.maxHeight = `${body.scrollHeight}px`;
+      });
+    }
+
     function header() {
       const links = navSections.map(([id, label]) => hashLink(`#${id}`, label)).join('');
-      const portal = `<a href="${data.school.portalUrl}" class="btn btn-primary nav-cta" style="color:#000">Portal</a>`;
-      return `<nav aria-label="Primary navigation" style="position:fixed;top:0;right:0;left:0;z-index:60;background:rgba(46,90,117,.98);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(31,66,87,.16)"><div class="nav-inner">${logoLockup()}<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-menu" aria-label="Open navigation"><span></span><span></span><span></span></button><div class="nav-links" id="primary-menu">${links}${portal}</div></div></nav><div aria-hidden="true" style="height:50px"></div>`;
-    }
+      const portal = `<a href="${data.school.portalUrl}" class="btn btn-primary nav-cta">Portal</a>`;
+      return `<nav aria-label="Primary navigation" style="position:fixed;top:0;right:0;left:0;z-index:60;background:rgba(46,90,117,.98);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(31,66,87,.16);min-height:64px;"><div class="nav-inner" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:05px 20px;max-width:1400px;margin:0 auto;width:100%;box-sizing:border-box;">${logoLockup()}<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-menu" aria-label="Open navigation"><span></span><span></span><span></span></button><div class="nav-links" id="primary-menu">${links}${portal}</div></div></nav><div aria-hidden="true" style="height:50px"></div>`;}
     
     function hero(title = 'KINDERVALE', subtitle = 'PRESCHOOL', tag = data.school.tagline, admissionModal = false, admissionSource = 'General Admissions') {
-      const admissionCta = admissionModal ? `<button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(admissionSource)}">Admissions -></button>` : hashLink('#admissions', 'Admissions ->', 'btn btn-primary');
-      return `<header class="hero" id="home"><div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div><div class="hero-lockup"><img class="hero-birds" src="${data.images.logo}" alt="" width="120" height="120"><h1 class="brand-title">${escape(title)}</h1><div class="brand-sub">${escape(subtitle)}</div><div class="brand-tag"><span class="ln"></span>${escape(tag)}<span class="ln"></span></div><div class="hero-cta">${admissionCta}${hashLink('#about', 'Explore Kindervale', 'btn btn-ghost')}</div></div><div class="wave"><svg viewBox="0 0 1440 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:50px"><path fill="#d6ecf7" d="M0,70 C70,40 130,90 210,64 C300,34 350,92 450,70 C560,46 620,96 730,72 C850,46 900,98 1020,74 C1140,50 1200,96 1300,72 C1370,55 1410,78 1440,70 L1440,140 L0,140 Z"/><path fill="#eaf4fb" d="M0,95 C90,66 160,104 260,84 C370,62 430,106 560,90 C690,74 760,110 900,92 C1030,76 1110,108 1240,92 C1340,80 1400,100 1440,92 L1440,140 L0,140 Z"/></svg></div></header>`;
+      const admissionCta = admissionModal ? `<button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(admissionSource)}">Admissions</button>` : hashLink('#admissions', 'Admissions', 'btn btn-primary');
+      return `<header class="hero" id="home"><div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div><div class="hero-lockup"><img class="hero-birds" src="${data.images.logo}" alt="" width="120" height="120"><h1 class="brand-title">${escape(title)}</h1><div class="brand-sub">${escape(subtitle)}</div><div class="brand-tag"></div><div class="hero-cta">${admissionCta}</div></div></header>`;
     }
    
     const sectionDecor = id => {
@@ -598,7 +656,7 @@
     
     const sectionTheme = id => `theme-${id || 'story'}`;
 
-    /* ─── Magical Preschool Dynamic Decorations Injector (Fixed Emoji Toys) ─── */
+    /* ─── Magical Preschool Dynamic Decorations Injector (Fixed 404s) ─── */
     const magicalDecor = (id) => {
       let scenery = '';
       let characters = '';
@@ -658,7 +716,7 @@
                 <div class="container" style="position:relative; z-index:10;">
                   <div class="sec-head">
                     <span class="eyebrow">${escape(eyebrow)}</span>
-                    <h2>${escape(title)}</h2>
+                    
                   </div>
                   ${body}
                 </div>
@@ -666,9 +724,12 @@
     }
 
     function textCard(title, text) { return `<article class="card"><span class="card-icon" aria-hidden="true"></span><h3>${escape(title)}</h3><p>${escape(text)}</p></article>`; }
-    function teamCard(member) {
-      const photo = member.photo ? `<img src="${escape(member.photo)}" alt="${escape(member.name)}" loading="lazy" decoding="async">` : '<span class="team-photo-placeholder">Photo</span>';
-      return `<article class="card team-card"><span class="card-icon" aria-hidden="true"></span><div class="team-photo">${photo}</div><div class="team-info"><h3>${escape(member.role)}</h3><p>${escape(member.name)}</p></div></article>`;
+    function teamNode(member, className = '') {
+      const names = member.name.split(',').map(name => name.trim()).filter(Boolean);
+      const content = names.length > 1
+        ? `<ul>${names.map(name => `<li>${escape(name)}</li>`).join('')}</ul>`
+        : `<p>${escape(member.name)}</p>`;
+      return `<article class="card team-node ${className}"><span class="card-icon" aria-hidden="true"></span><h3>${escape(member.role)}</h3>${content}</article>`;
     }
     function rollingImages() {
       const items = data.images.gallery.slice(0, 10);
@@ -678,7 +739,7 @@
     function aboutText(text) {
       return escape(text)
         .replace('Ms. Tazeen Raza', '<strong>Ms. Tazeen Raza</strong>')
-        .replace("It's a celebration of childhood.", "<strong>It's a celebration of childhood.</strong>")
+        .replace('It is a celebration of childhood.', '<strong>It is a celebration of childhood.</strong>')
         .replace('well-groomed, compassionate and confident members of the community.', '<strong>well-groomed, compassionate and confident members of the community.</strong>');
     }
     function about() {
@@ -686,12 +747,14 @@
       const secondImage = data.images.gallery[11] || data.images.gallery[10] || data.images.gallery[1] || {};
       return `<section class="pad theme-about" id="about">${magicalDecor('about')}${sectionDecor('about')}<div class="container" style="position:relative; z-index:10;"><div class="about-layout"><div class="about-images"><figure class="about-image"><img src="${escape(firstImage.thumbnail || firstImage.src || data.images.logo)}" alt="${escape(firstImage.title || 'Kindervale classroom activity')}" loading="lazy" decoding="async"></figure><figure class="about-image"><img src="${escape(secondImage.thumbnail || secondImage.src || data.images.logo)}" alt="${escape(secondImage.title || 'Kindervale learning activity')}" loading="lazy" decoding="async"></figure></div><div class="about-copy"><h2>About Us</h2><p>${aboutText(data.about[0])}</p><p>${aboutText(data.about[1])}</p></div></div></div></section>`;
     }
-    function missionVision() { return section('Our Purpose', 'Mission, Vision & Values', `<div class="cards" data-mobile-collapse>${textCard('Our Mission', data.mission)}${textCard('Our Vision', data.vision)}${textCard('Our Values', data.values.slice(0, 3).join(' '))}</div><div class="panel" style="margin-top:24px" data-mobile-collapse><h3>Values in practice</h3><ul>${data.values.map(value => `<li>${escape(value)}</li>`).join('')}</ul></div>`, 'mission-vision'); }
-    function founder() { return section(' ', "Founder's Message", `<div class="two-col"><div class="panel" data-mobile-collapse><img src="${escape(data.images.founder)}" alt="${escape(data.founder.name)}, ${escape(data.founder.title)}" loading="lazy" decoding="async" style="width:100%;border-radius:14px;margin-bottom:16px"><h3>${escape(data.founder.name)}</h3><p class="desc">${escape(data.founder.title)}</p><div data-expandable-text>${data.founder.career.map(p => `<p style="margin-top:14px">${escape(p)}</p>`).join('')}</div></div><div class="panel founder-message" data-mobile-collapse><h3>Dear Parents,</h3><div class="founder-message-content" id="founder-message-content" data-expandable-text>${data.founder.message.map(p => `<p style="margin-bottom:14px">${escape(p)}</p>`).join('')}<p><strong>${escape(data.founder.name)}</strong></p></div></div></div>`, 'founder'); }
-    function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><p>${escape(data.curriculum.summary)}</p></div><div class="eyfs">${data.curriculum.areas.map((area, index) => `<div><span>${['♥','★','✦','●','◎','✿','○'][index]}</span>${escape(area)}</div>`).join('')}</div>`, 'curriculum'); }
+    function missionVision() {
+      return section('', 'Mission, Vision & Values', `<div class="cards" data-mobile-collapse>${infoCard('Our Mission', data.mission)}${infoCard('Our Vision', data.vision)}${infoCard('Our Values', data.values, {list: true})}</div>`, 'mission-vision');
+    }
+    function founder() { return section(' ', "Founder's Message", `<div class="two-col"><div class="panel" data-mobile-collapse><img class="founder-photo" src="${escape(data.images.founder)}" alt="${escape(data.founder.name)}, ${escape(data.founder.title)}" loading="lazy" decoding="async"><h3>${escape(data.founder.name)}</h3><p class="desc">${escape(data.founder.title)}</p><div data-expandable-text>${data.founder.career.map(p => `<p style="margin-top:14px">${escape(p)}</p>`).join('')}</div></div><div class="panel founder-message" data-mobile-collapse><h3>Dear Parents,</h3><div class="founder-message-content" id="founder-message-content" data-expandable-text>${data.founder.message.map(p => `<p style="margin-bottom:14px">${escape(p)}</p>`).join('')}<p><strong>${escape(data.founder.name)}</strong></p></div></div></div>`, 'founder'); }
+    function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><h3 style="font-size:30px">Early Years Foundation Stage<br></h3><p>${escape(data.curriculum.summary)}</p></div><h3 style="font-size:31px; text-align:center;">Area's of Development<br><br></h3><div class="eyfs">${data.curriculum.areas.map((area, index) => `<div><span>${['♥','★','✦','●','◎','✿','○'][index]}</span>${escape(area)}</div>`).join('')}</div>`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('Learning Stages for Every Age', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="./levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${escape(level.image)}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
+      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
@@ -704,14 +767,18 @@
       const categories = [...preferred.filter(category => grouped[category]), ...Object.keys(grouped).filter(category => !preferred.includes(category)).sort()];
       const body = `<div class="gallery-highlights" aria-label="Gallery categories">${categories.map(category => {
         const cover = grouped[category].find(entry => entry.featured) || grouped[category][0];
-        return `<button type="button" class="gallery-highlight" data-gallery-category="${escape(category)}"><span class="highlight-cover"><img src="${escape(cover.thumbnail || cover.src)}" alt="" loading="lazy" decoding="async"></span><span class="highlight-label">${escape(category)}</span></button>`;
+        return `<button type="button" class="gallery-highlight" data-gallery-category="${escape(category)}" style="text-align=center;"><span class="highlight-cover"><img src="${escape(cover.thumbnail || cover.src)}" alt="" loading="lazy" decoding="async"></span><span class="highlight-label">${escape(category)}</span></button>`;
       }).join('')}</div><p class="gallery-note">Tap a highlight to view the full category.</p>`;
-      return section('Life at Kindervale', 'Gallery & Events', `${body}<div class="panel"><h3>Events</h3><p>${data.events.map(escape).join(' · ')}</p></div>`, 'gallery');
+      return section('', 'Gallery', `${body}`, 'gallery');
     }
-    function facilities() { return section('A Safe, Nurturing Setting', 'School Facilities', `<div class="cards">${data.facilities.map(item => textCard(item, '')).join('')}</div>`, 'facilities'); }
-    function team() { return section('The Kindervale Team', 'Our Team', `<div class="cards">${data.team.map(member => teamCard(member)).join('')}</div>`, 'team'); }
-    function fees() { return section('Fee Structure', data.fees.year, `<div class="cards">${data.fees.items.map(([label, amount]) => textCard(label, amount)).join('')}</div><div class="panel" style="margin-top:24px"><h3>Notes</h3><ol>${data.fees.notes.map(note => `<li>${escape(note)}</li>`).join('')}</ol></div>`, 'fees'); }
-    function admissions() { return section('Admissions', 'Join Kindervale', `<div class="two-col"><article class="panel"><h3>Plan your visit</h3><p>${escape(data.admissions.tour)}</p><p style="margin-top:14px"><strong>Office hours</strong></p>${data.admissions.officeHours.map(item => `<p>${escape(item)}</p>`).join('')}<p style="margin-top:20px"><button type="button" class="btn btn-primary" data-open-admission>Admission Form -></button></p></article><article class="panel" data-mobile-collapse><h3>Contact us</h3><p>${escape(data.school.address)}</p><p style="margin-top:12px"><a href="tel:${data.school.phone.replace(/\s/g, '')}">${escape(data.school.phone)}</a></p><p><a href="tel:${data.school.landline.replace(/\s/g, '')}">${escape(data.school.landline)}</a></p><p><a href="mailto:${data.school.email}">${escape(data.school.email)}</a></p></article></div>`, 'admissions'); }
+    function facilities() { return section('', 'School Facilities', `<div class="cards"><article class="card"><span class="card-icon" aria-hidden="true"></span><h3>Our Facilities</h3><ul>${data.facilities.map(item => `<li>${escape(item)}</li>`).join('')}</ul></article></div>`, 'facilities'); }
+    function team() {
+      const byRole = role => data.team.find(member => member.role === role);
+      const row = (roles, className = '') => `<div class="team-chart-row">${roles.map(role => teamNode(byRole(role), className)).join('')}</div>`;
+      return section('The Kindervale Team', 'Our Team', `<div class="team-chart">${row(['CEO/Principal'], 'lead')}${row(['Admin/HR Head', 'Academic Co-ordinator'])}${row(['Accounts Manager', 'Operations Head', 'Admissions Officer & Asst. Head', 'Head Teacher'])}${row(['Asst. Accounts Manager', 'Supervisor', 'Cashier', 'Computer Operator'])}${row(['School Teachers', 'Daycare Teachers', 'Asst. Teachers', 'Nannies'], 'group')}${row(['Sports Teacher', 'Driver', 'Office Boy', 'Security Guard'])}</div>`, 'team');
+    }
+    function fees() { return section('', 'Fee Structure', `<div class="cards">${data.fees.items.map(([label, amount]) => textCard(label, amount)).join('')}</div><div class="panel" style="margin-top:15px"><h3>Notes</h3><ol>${data.fees.notes.map(note => `<li>${escape(note)}</li>`).join('')}</ol></div>`, 'fees'); }
+    function admissions() { return section('', 'Admissions', `<div class="two-col"><article class="panel"><h3>Plan your visit</h3><p>${escape(data.admissions.tour)}</p><p style="margin-top:14px"><strong>Office hours</strong></p>${data.admissions.officeHours.map(item => `<p>${escape(item)}</p>`).join('')}<p style="margin-top:20px"><button type="button" class="btn btn-primary" data-open-admission>Admission Form</button></p></article><article class="panel" data-mobile-collapse><h3>Contact us</h3><p>${escape(data.school.address)}</p><p style="margin-top:12px"><a href="tel:${data.school.phone.replace(/\s/g, '')}">${escape(data.school.phone)}</a></p><p><a href="tel:${data.school.landline.replace(/\s/g, '')}">${escape(data.school.landline)}</a></p><p><a href="mailto:${data.school.email}">${escape(data.school.email)}</a></p></article></div>`, 'admissions'); }
     function consultancy() { return section('Kindervale Consultancy', 'Consultancy', `<div class="sec-head" data-mobile-collapse><p>${escape(data.consultancy.summary)}</p></div><div class="cards">${data.consultancy.services.map(service => textCard(service[0], service[1])).join('')}</div>`, 'consultancy'); }
     
     function footer() { 
@@ -720,7 +787,6 @@
                   <div class="scenery-star" style="top:15%; left:10%; font-size:24px;">⭐</div>
                   <div class="scenery-star" style="top:40%; left:80%; font-size:32px; animation-delay:1.5s;">⭐</div>
                   <div class="scenery-star" style="top:60%; left:25%; font-size:20px; animation-delay:0.5s;">⭐</div>
-                  <div class="scenery-cloud" style="width:300px; height:80px; top:70%; left:10%; opacity:0.2;"></div>
                 </div>
                 <div class="character-layer" aria-hidden="true">
                   <div style="position:absolute; top:10%; right:10%; font-size:6rem; filter:drop-shadow(0 0 20px #FFF);">🌙</div>
@@ -783,6 +849,12 @@
     function applyMobileCollapse() {
       applyExpandableText(site);
     }
+    function markInteractiveSurfaces(root = site) {
+      $$('.card,.panel', root).forEach(surface => {
+        const hasAction = Boolean($('a[href],button,[role="button"],[tabindex]:not([tabindex="-1"])', surface));
+        surface.classList.toggle('is-interactive-surface', hasAction);
+      });
+    }
 
     function render(path = location.pathname, options = {}) {
       if (activeObserver) activeObserver.disconnect();
@@ -796,9 +868,11 @@
       wireNavigation();
       wireLightbox();
       wireAdmissionModal();
+      wireInfoCards(site);
       enhanceMedia(site);
       applyMobileCollapse();
       applyExpandableText(site);
+      markInteractiveSurfaces(site);
       updateNavbarState();
       if (level) {
         window.scrollTo({top: 0, behavior: options.instant ? 'auto' : 'smooth'});
@@ -1061,7 +1135,7 @@
         const payload = new FormData(form);
         payload.set('admissionSource', sourceField?.value || getAdmissionSource());
         try {
-          const response = await fetch('./api/admission', {
+          const response = await fetch('/api/admission', {
             method: 'POST',
             body: payload
           });
@@ -1092,10 +1166,10 @@
       });
     }
 
-    function levelPage(level) {
-      const galleryItems = data.images.gallery.slice(0, 3);
-      return `${hero(level.name.toUpperCase(), 'PROGRAMME', `Age ${level.age}`, true, level.name)}${section(level.name, 'Overview', `<div class="panel"><p><a href="${homePath}#levels" data-back-home class="btn btn-primary">Back to homepage</a></p></div><div class="two-col"><article class="panel" data-mobile-collapse><h3>Overview</h3><p>${escape(level.overview)}</p><h3 style="margin-top:20px">Age group</h3><p>${escape(level.age)}</p><h3 style="margin-top:20px">Timings</h3><p>${escape(level.timings)}</p></article><article class="panel" data-mobile-collapse><h3>Curriculum</h3><p>${escape(level.curriculum)}</p><h3 style="margin-top:20px">Learning objectives</h3><ul>${level.objectives.map(item => `<li>${escape(item)}</li>`).join('')}</ul><h3 style="margin-top:20px">Daily activities</h3><p>${level.activities.map(escape).join(' · ')}</p></article></div><div class="gallery" style="margin-top:34px">${galleryItems.map(entry => `<figure class="gcircle">${image(entry)}<figcaption>${escape(entry.title)}</figcaption></figure>`).join('')}</div><div class="strip"><div style="position:relative;z-index:2"><h2>Interested in ${escape(level.name)}?</h2><p>Book a tour or access the admission form to take the next step.</p><button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(level.name)}">Admissions -></button></div></div>`)}${footer()}`;
-    }
+   function levelPage(level) {
+  const galleryItems = data.images.gallery.slice(0, 3);
+  return `${hero(level.name.toUpperCase(), 'PROGRAMME', `Age ${level.age}`, true, level.name)}${section(level.name, 'Overview', `<div class="two-col"><article class="panel" data-mobile-collapse><h3>Overview</h3><p>${escape(level.overview)}</p><h3 style="margin-top:20px">Age group</h3><p>${escape(level.age)}</p><h3 style="margin-top:20px">Timings</h3><p>${escape(level.timings)}</p></article><article class="panel" data-mobile-collapse><h3 style="margin-top:20px">Learning objectives</h3><ol>${level.objectives.map(item => `<li>${escape(item)}</li>`).join('')}</ol></article></div><div class="gallery" style="margin-top:34px">${galleryItems.map(entry => `<figure class="gcircle"><figcaption>${escape(entry.title)}</figcaption></figure>`).join('')}</div><div class="strip"><div style="position:relative;z-index:2"><h2>Interested in ${escape(level.name)}?</h2><p>Book a tour or access the admission form to take the next step.</p><button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(level.name)}">Admissions</button></div></div><br><br><div class="panel"><p><a href="${homePath}#levels" data-back-home class="btn btn-primary">Back to homepage</a></p></div>`)}${footer()}`;
+}
 
     document.addEventListener('click', event => {
       const route = event.target.closest('a[data-route]');
@@ -1134,6 +1208,7 @@
     window.addEventListener('resize', () => {
       updateNavbarState();
       applyMobileCollapse();
+      refreshInfoCardHeights(site);
     }, {passive: true});
     window.addEventListener('beforeunload', () => {
       if (!location.pathname.startsWith('/levels')) sessionStorage.setItem('kindervale:lastHomeScroll', String(window.scrollY));
