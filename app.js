@@ -146,7 +146,7 @@
 .hbc-puff.p7{right:52%;left:auto;width:320px;height:310px;bottom:-40px;background:#d3d9e0}
 .hero .hero-cta{position:relative;z-index:3}
 .hero-lockup{display:flex;flex-direction:column;align-items:center;text-align:center;color:#fff;padding:0 20px;width:100%;max-width:100%;box-sizing:border-box}
-.brand-title{font-size:clamp(34px,8vw,32px);letter-spacing:1px;margin-right:0;padding-left:0;white-space:normal;word-break:break-word;width:100%;max-width:100%;line-height:1.2;box-sizing:border-box}
+.brand-title{font-size:clamp(34px,12vw,44px);letter-spacing:1px;margin-right:0;padding-left:0;white-space:normal;word-break:break-word;width:100%;max-width:100%;line-height:1.2;box-sizing:border-box}
 .brand-sub{font-family:'Montserrat',Arial,sans-serif;font-size:clamp(14px,2vw,22px);letter-spacing:clamp(18px,3.5vw,46px);margin-right:calc(clamp(18px,3.5vw,36px) * -1);font-weight:400;margin-bottom:34px;text-transform:uppercase}
 .brand-tag{display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Montserrat',Arial,sans-serif;font-size:clamp(16px,2vw,22px);font-weight:400;white-space:nowrap}
 .brand-tag:empty{display:none}
