@@ -590,7 +590,18 @@ main section.pad .level:hover img{transform:scale(1.035)}
         footer .sky-layer, footer .sky-layer .cloud {
           animation-play-state: paused !important;
         }
-      `;
+      @media (min-width: 768px) {
+          .hero .brand-title {
+            font-size: clamp(60px, 10vw, 140px) !important;
+            letter-spacing: 8px !important;
+            margin-right: -8px !important;
+          }
+          .hero .brand-sub {
+            font-size: clamp(16px, 2.2vw, 26px) !important;
+            letter-spacing: clamp(24px, 4vw, 54px) !important;
+            margin-right: calc(clamp(24px, 4vw, 54px) * -1) !important;
+          }
+        }`;
       document.head.appendChild(s);
     }
 
