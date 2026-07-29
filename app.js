@@ -72,23 +72,32 @@
         }
       }
     } catch (error) {
-      console.info('Using bundled gallery data.');
-    }
-    data.images.logo = homePath + data.images.logo.replace(/^\.\//, '');
-      data.images.founder = homePath + data.images.founder.replace(/^\.\//, '');
-      if (data.images.gallery) {
-        data.images.gallery.forEach(img => {
-          if (img.src) img.src = homePath + img.src.replace(/^\.\//, '');
-          if (img.thumbnail) img.thumbnail = homePath + img.thumbnail.replace(/^\.\//, '');
-        });
+        console.info('Using bundled gallery data.');
       }
-      if (data.levels) {
+
+      const fixPath = (path) => {
+        if (!path || path.startsWith('http') || path.startsWith('data:')) return path;
+        return homePath + path.replace(/^[\.\/]+/, '');
+      };
+
+      if (data.images) {
+        if (data.images.logo) data.images.logo = fixPath(data.images.logo);
+        if (data.images.founder) data.images.founder = fixPath(data.images.founder);
+        if (Array.isArray(data.images.gallery)) {
+          data.images.gallery.forEach(img => {
+            if (img.src) img.src = fixPath(img.src);
+            if (img.thumbnail) img.thumbnail = fixPath(img.thumbnail);
+          });
+        }
+      }
+      if (Array.isArray(data.levels)) {
         data.levels.forEach(level => {
-          if (level.image) level.image = homePath + level.image.replace(/^\.\//, '');
+          if (level.image) level.image = fixPath(level.image);
         });
       }
-    start(data);
-  }).catch(error => console.error(error));
+
+      start(data);
+    }).catch(error => console.error(error));
 
   function start(data) {
     const site = $('#site');
