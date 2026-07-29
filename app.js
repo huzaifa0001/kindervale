@@ -1356,17 +1356,18 @@ function updateTeamMoreHeight(root = site) {
       if (scroll) {
         event.preventDefault();
         const hash = `#${scroll.dataset.scrollTarget}`;
-        
-        // Robust check: the 'about' section ONLY exists on the homepage.
-        // This makes the scroll immune to any GitHub Pages URL mismatches.
         const isOnHomePage = !!document.getElementById('about');
         
+        history.pushState({}, '', `${homePath}${hash}`);
+
         if (isOnHomePage) {
-          history.pushState({}, '', `${homePath}${hash}`);
-          scrollToHash(hash); // Smooth scroll to the section
+          // Already on homepage: just smooth scroll to the section
+          scrollToHash(hash, false); 
         } else {
-          history.pushState({}, '', `${homePath}${hash}`);
-          render(homePath, {instant: true}); // Rebuild homepage and jump
+          // Snap to top secretly so the animation starts from the top of the homepage
+          window.scrollTo(0, 0);
+          // Rebuild the homepage and smoothly scroll down (instant: false)
+          render(homePath, {instant: false}); 
         }
       }
     });
