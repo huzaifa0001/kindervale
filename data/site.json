@@ -97,7 +97,7 @@
   },
   "about": [
     "Kindervale is a learning establishment for preschoolers, founded by Ms. Tazeen Raza, an educationist since the past 25 years. She has done her Masters in Educational Leadership and Management and Teacher Certification course from UK. She began her career at the age of 22 as a preschool teacher and later progressed to Headmistress and Principal in Beaconhouse and Lahore Grammar School.",
-    "Established in 2021, Kindervale Preschool is more than just a school. It's a celebration of childhood. Kindervale prides itself over its love for children, their curiosity and creativity. A space that not only prioritises academic achievement, but also aims to cultivate well-groomed, compassionate and confident members of the community."
+    "Established in 2021, Kindervale Preschool is more than just a school. It is a celebration of childhood. Kindervale prides itself over its love for children, their curiosity and creativity. A space that not only prioritises academic achievement, but also aims to cultivate well-groomed, compassionate and confident members of the community."
   ],
   "founder": {
     "name": "Mrs. Tazeen Raza",
@@ -152,9 +152,9 @@
       "timings": "9:30 am to 12:30 pm",
       "image": "https://static.wixstatic.com/media/29bf34_22d2e70b48b946f4b14c8a05a85c9bae~mv2.jpg/v1/fill/w_254,h_282,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_9226.jpg",
       "imageAlt": "Fine Motor Skills via Play Time",
-      "overview": "A semi-structured programme targeted towards two to three years old who need orientation towards learning and positive growth.",
+      "overview": "A semi-structured programme targeted towards two to three years old who need orientation towards learning and positive growth. Focuses on Sensorial, Fine and Gross motor skills while simultaneously provides them with ample opportunities to interact socially and express themselves through artwork and pretend play.",
       "curriculum": "Focuses on sensoral, fine and gross motor skills while providing ample opportunities to interact socially and express themselves through artwork and pretend play.",
-      "objectives": ["Take a small step towards learning", "Learn what school is like", "Develop positive relationships with children and adults", "Gain confidence"],
+      "objectives": ["Your child gets to take  a small step towards learning.", "They learn about what school is like.", "They develop positive relationships with other children and adults.", "They gain confidence.","They make lots of artwork!","They get to play, sing and dance!"],
       "activities": ["Artwork", "Play", "Singing", "Dancing"]
     },
     {
@@ -277,6 +277,4 @@
     "Sports Day",
     "Annual Play"
   ]
-
 }
-

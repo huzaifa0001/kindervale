@@ -1,23 +1,11 @@
 (() => {
   'use strict';
 
+  const dataUrl = '/data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
-  const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'<','>':'>',"'":'&#39;','"':'"'}[c]));
-  /* ─── Auto-detect base path for GitHub Pages subdirectory deploy ─── */
-  const __BASE = (() => {
-    const path = location.pathname;
-    // If served from a subdirectory like /kindervale/, extract the base
-    const match = path.match(/^(\/[^/]+)\/(?:index\.html)?$/);
-    if (match) return match[1];
-    // If running at root, base is empty
-    if (path === '/' || path.endsWith('index.html')) return '';
-    // Fallback: if kindervale.html is in a subdirectory
-    if (path.includes('kindervale.html')) return path.replace('/kindervale.html', '');
-    return '';
-  })();
-  const dataUrl = __BASE ? `${__BASE}/data/site.json` : '/data/site.json';
-  const homePath = __BASE ? __BASE + '/' : (location.pathname.endsWith('kindervale.html') ? location.pathname : '/');
+  const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const homePath = location.pathname.endsWith('kindervale.html') ? location.pathname : '/';
   let activeObserver;
   let lastHomeScroll = Number(sessionStorage.getItem('kindervale:lastHomeScroll') || 0);
   let currentAdmissionSource = 'General Admissions';
@@ -62,12 +50,12 @@
     '': ['kite', 'star']
   };
 
-fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => {
+  fetch(dataUrl).then(response => {
     if (!response.ok) throw new Error('Unable to load site content');
     return response.json();
   }).then(async data => {
     try {
-      const galleryResponse = await fetch(__BASE ? `${__BASE}/api/gallery` : '/api/gallery');
+      const galleryResponse = await fetch('/api/gallery');
       if (galleryResponse.ok) {
         const gallery = await galleryResponse.json();
         if (Array.isArray(gallery.images) && gallery.images.length) {
@@ -92,19 +80,19 @@ fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => 
     const site = $('#site');
     injectStyles();
     const logo = () => `<img class="kv-birds" src="${data.images.logo}" alt="Kindervale Preschool" style="width:100%;height:100%;object-fit:contain" width="48" height="48">`;
-    const logoLockup = () => `<div class="logo"><div class="mark">${logo()}</div><div>KINDERVALE<small>PRESCHOOL</small></div></div>`;
+    const logoLockup = () => `<a href="${homePath}#home" class="logo" data-scroll-target="home" aria-label="Kindervale Preschool home"><div class="mark">${logo()}</div><div>KINDERVALE<small>PRESCHOOL</small></div></a>`;
     const image = (entry, extra = '') => `<img src="${entry.src}" alt="${escape(entry.title)}" loading="lazy" decoding="async" ${extra}>`;
     const hashLink = (hash, label, className = '') => `<a href="${homePath}${hash}" data-scroll-target="${hash.slice(1)}" class="${className}">${escape(label)}</a>`;
     const navSections = [
       ['about', 'About Us'],
+      ['founder', "Our Founder"],
       ['curriculum', 'Curriculum'],
       ['levels', 'Our Levels'],
-      ['team', 'Our Team'],
       ['facilities', 'School Facilities'],
       ['admissions', 'Admissions'],
       ['fees', 'Fee Structure'],
-      ['consultancy', 'Consultancy'],
-      ['founder', "Founder's Career Profile"]
+      ['team', 'Our Team'],
+      ['consultancy', 'Consultancy']
     ];
     const sectionIds = navSections.map(([id]) => id).filter(id => id !== 'home');
     const pageTitle = path => path === '/' ? 'Kindervale Preschool | DHA-II Islamabad' : `${path.split('/').filter(Boolean).map(part => part.replaceAll('-', ' ')).map(part => part[0].toUpperCase() + part.slice(1)).join(' | ')} | Kindervale Preschool`;
@@ -117,12 +105,29 @@ fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => 
       
       // Original Base CSS (Preserving hero, layout, nav exactly)
       s.textContent = `
+        .hero{position:relative;overflow:hidden}
+.hero-bottom-clouds{position:absolute;left:0;right:0;bottom:0;height:min(46%,260px);pointer-events:none;z-index:2}
+.hbc-puff{position:absolute;bottom:-18px;border-radius:999px;background:#dde2e8;filter:drop-shadow(0 -6px 10px rgba(31,66,87,.08))}
+.hbc-puff.p1{left:0%;width:520px;height:210px;bottom:-50px;background:#d3d9e0}
+.hbc-puff.p2{left:5%;width:670px;height:250px;bottom:-30px;background:#dde2e8}
+.hbc-puff.p3{left:10%;width:510px;height:290px;bottom:-20px;background:#e6e9ee}
+.hbc-puff.p4{left:28%;width:480px;height:320px;bottom:-10px;background:#dde2e8}
+.hbc-puff.p5{left:55%;width:310px;height:290px;bottom:-20px;background:#e6e9ee}
+.hbc-puff.p6{left:68%;width:670px;height:250px;bottom:-30px;background:#dde2e8}
+.hbc-puff.p7{right:52%;left:auto;width:320px;height:310px;bottom:-40px;background:#d3d9e0}
+.hero .hero-cta{position:relative;z-index:3}
+.hero-lockup{display:flex;flex-direction:column;align-items:center;text-align:center;color:#fff;padding:0 20px}
+.brand-title{font-size:clamp(40px,7vw,76px);letter-spacing:6px;margin-right:-6px;margin-bottom:12px;font-weight:400;margin-top:0;}
+.brand-sub{font-family:'Montserrat',Arial,sans-serif;font-size:clamp(14px,2vw,22px);letter-spacing:clamp(18px,3.5vw,46px);margin-right:calc(clamp(18px,3.5vw,36px) * -1);font-weight:400;margin-bottom:34px;text-transform:uppercase}
+.brand-tag{display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Montserrat',Arial,sans-serif;font-size:clamp(16px,2vw,22px);font-weight:400;white-space:nowrap}
+.brand-tag:empty{display:none}
+.brand-tag .ln{display:block;height:1px;width:clamp(80px,12vw,160px);background:#fff}
+@media(max-width:767px){.hero-bottom-clouds{height:min(52%,220px)}.hbc-puff{transform:scale(.82)}}
+@media(prefers-reduced-motion:reduce){.hbc-puff{transition:none}}
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
-        html,body{max-width:100%;overflow-x:hidden;font-family:'Montserrat',Arial,sans-serif;font-weight:400}h1,h2,h3,h4,h5,h6,.logo,.brand-title,.brand-sub,.eyebrow{font-family:'Quincy CF',Georgia,'Times New Roman',serif;font-weight:400}img,svg{max-width:100%}body.modal-open{overflow:hidden}.nav-toggle{display:none}
-        .playful-band{position:relative;overflow:hidden;background:linear-gradient(180deg,#eaf4fb,#fbfcfd);padding:34px 0 16px}
-        .playful-band::before,.playful-band::after{content:"";position:absolute;border-radius:999px;opacity:.45;pointer-events:none}
-        .playful-band::before{width:120px;height:120px;background:#fff3dd;left:7%;top:8px}
-        .playful-band::after{width:92px;height:92px;background:#fdecf1;right:9%;bottom:-28px}
+        html,body{max-width:100%;overflow-x:hidden;font-family:'Montserrat',Arial,sans-serif;font-weight:400}h1,h2,h3,h4,h5,h6,.logo,.brand-title,.eyebrow{font-family:'Quincy CF',Georgia,'Times New Roman',serif;font-weight:400}img,svg{max-width:100%}body.modal-open{overflow:hidden}.nav-toggle{display:none}
+        .playful-band{position:relative;overflow:hidden;background:#FFFFFF;padding:34px 0 16px}
+        .playful-band::before,.playful-band::after{display:none !important;}
         .rolling-gallery{display:flex;width:max-content;gap:22px;animation:rollGallery 36s linear infinite;will-change:transform}
         .rolling-gallery:hover{animation-play-state:paused}
         .rolling-item{flex:0 0 clamp(150px,20vw,245px);aspect-ratio:1;border-radius:999px;padding:6px;background:conic-gradient(from 180deg,var(--yellow),#fff,var(--teal),#fdecf1,var(--yellow));box-shadow:0 12px 28px rgba(46,90,117,.16)}
@@ -190,9 +195,10 @@ fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => 
         .nav:hover{background:rgba(46,90,117,1)}
         .nav-inner{position:relative;z-index:1}
         .nav-links a{transition:color .2s ease,opacity .2s ease,transform .2s ease}
-        .nav-links .nav-cta{background:#f6b41e;color:#10233d!important;border:1px solid rgba(255,255,255,.7);box-shadow:0 8px 18px rgba(0,0,0,.12);backdrop-filter:none;-webkit-backdrop-filter:none}
-        .nav-links .nav-cta:hover{background:#ffd15c;filter:none}
-        .btn{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,filter .18s ease}
+        .nav-inner, nav{overflow:visible!important}
+        .nav-links .nav-cta{display:inline-flex;align-items:center;justify-content:center;padding:10px 24px;border-radius:999px!important;background:linear-gradient(135deg, #FFB74D, #FF8A65)!important;color:#FFF!important;border:none!important;box-shadow:0 8px 20px rgba(255, 138, 101, 0.4)!important;text-decoration:none;transform:translateZ(0);margin-top:0}
+        .nav-links .nav-cta:hover{filter:brightness(1.1)!important;transform:translateY(-2px) translateZ(0);box-shadow:0 12px 28px rgba(255, 138, 101, 0.6)!important}
+        .btn{border-radius:999px;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,filter .18s ease}
         .card,.level,.panel{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
         .card.is-interactive-surface:hover,.level:hover,.panel.is-interactive-surface:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(51,65,92,.12)}
         .level img,.card img,.panel img{transition:transform .28s ease,opacity .28s ease}
@@ -205,13 +211,25 @@ fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => 
         .lightbox.gallery-viewer{box-sizing:border-box}
         .gallery-stage{display:grid;grid-template-columns:46px minmax(0,1fr) 46px;align-items:center;width:min(1060px,96vw)}
         .gallery-stage img{grid-column:2;justify-self:center;max-width:min(820px,100%)}
+        #team .team-more{position:relative;overflow:hidden;max-height:0;opacity:0;display:grid;gap:28px;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .4s ease}
+#team .team-more.is-open{opacity:1;padding-top:0}
+#team .team-more .team-chart-row{opacity:0;transform:translateY(14px);transition:opacity .4s ease,transform .4s ease}
+#team .team-more.is-open .team-chart-row{opacity:1;transform:translateY(0)}
+#team .team-more.is-open .team-chart-row:nth-child(2){transition-delay:.06s}
+#team .team-more.is-open .team-chart-row:nth-child(3){transition-delay:.12s}
+#team .team-more.is-open .team-chart-row:nth-child(4){transition-delay:.18s}
+#team .team-toggle{display:flex;align-items:center;justify-content:center;gap:8px;margin:32px auto 0;min-height:48px;padding:12px 30px}
+#team .team-toggle-icon{display:inline-block;transition:transform .3s ease}
+#team .team-toggle[aria-expanded="true"] .team-toggle-icon{transform:rotate(180deg)}
+@media(max-width:520px){#team .team-toggle{width:100%;max-width:340px}}
+@media(prefers-reduced-motion:reduce){#team .team-more,#team .team-more .team-chart-row,#team .team-toggle-icon{transition:none}}
         @keyframes fieldShake{0%{transform:translateX(0)}30%{transform:translateX(-3px)}60%{transform:translateX(3px)}100%{transform:translateX(0)}}
         @keyframes rollGallery{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(-50% - 11px),0,0)}}
-        @media(max-width:1024px){.nav-inner{gap:12px}.nav-toggle{display:inline-flex;width:46px;height:46px;border:1px solid rgba(255,255,255,.24);border-radius:14px;background:rgba(255,255,255,.1);align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;flex:0 0 auto}.nav-toggle span{display:block;width:22px;height:2px;border-radius:2px;background:#fff;transition:transform .22s ease,opacity .22s ease}nav.menu-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}nav.menu-open .nav-toggle span:nth-child(2){opacity:0}nav.menu-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}.nav-links{position:absolute;top:100%;left:0;right:0;display:flex;flex-direction:column;gap:0;max-height:0;overflow:hidden;padding:0px 0px;background:rgba(46,90,117,.98);box-shadow:0 18px 28px rgba(31,66,87,.2);white-space:normal;transition:max-height .28s ease,padding .28s ease}.nav-links a{font-size:15px;text-align:left;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.12)}.nav-links a.active{color:var(--yellow)}.nav-links .nav-cta{justify-content:center;margin-top:10px;color:#1f4257;border-bottom:0}nav.menu-open .nav-links{max-height:75vh;overflow-y:auto;padding:10px 22px 18px}}
+        @media(max-width:1024px){.nav-inner{gap:12px}.nav-toggle{display:inline-flex;width:46px;height:46px;border:1px solid rgba(255,255,255,.24);border-radius:14px;background:rgba(255,255,255,.1);align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;flex:0 0 auto}.nav-toggle span{display:block;width:22px;height:2px;border-radius:2px;background:#fff;transition:transform .22s ease,opacity .22s ease}nav.menu-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}nav.menu-open .nav-toggle span:nth-child(2){opacity:0}nav.menu-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}.nav-links{position:absolute;top:100%;left:0;right:0;display:flex;flex-direction:column;gap:0;max-height:0;overflow-y:hidden;overflow-x:visible;padding:0px 0px;background:rgba(46,90,117,.98);box-shadow:0 18px 28px rgba(31,66,87,.2);white-space:normal;transition:max-height .28s ease,padding .28s ease}.nav-links a{font-size:15px;text-align:left;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.12)}.nav-links a.active{color:var(--yellow)}.nav-links .nav-cta{justify-content:center;margin-top:10px;border-bottom:0}nav.menu-open .nav-links{max-height:75vh;overflow-y:auto;padding:10px 22px 18px}}
         @media(max-width:880px){.level img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;border:4px solid rgba(255,255,255,.7);margin-bottom:16px}.form-grid{grid-template-columns:1fr}}
         @media(max-width:980px){#about .about-layout{grid-template-columns:minmax(260px,.8fr) minmax(330px,1fr);gap:42px}#about .about-images{grid-template-rows:repeat(2,160px)}#about .about-image{width:160px;height:160px}#about .about-copy p{font-size:16px}}
         @media(max-width:880px){.team-photo{width:70px;height:70px;flex-basis:70px}}
-        @media(max-width:767px){.container{padding:0 16px}.nav-inner{padding:10px 16px}.logo{font-size:14px;letter-spacing:1px;min-width:0}.logo .mark{width:44px;height:44px}.logo small{letter-spacing:4px}.hero{padding:48px 0 105px}.hero-lockup{padding:0 16px}.brand-title{font-size:clamp(34px,12vw,44px);letter-spacing:5px;padding-left:5px;overflow-wrap:anywhere}.brand-sub{font-size:14px;letter-spacing:8px;padding-left:8px}.brand-tag{font-size:16px;gap:10px;line-height:1.35;flex-wrap:wrap;margin-bottom:30px}.brand-tag .ln{width:34px}.hero-cta,.form-actions{align-items:stretch;flex-direction:column}.btn{min-height:44px;justify-content:center;padding:12px 20px}.sec-head{margin-bottom:28px}.sec-head h2{font-size:28px;line-height:1.2}section.pad{padding:48px 0}.cards,.levels,.eyfs,.gallery{grid-template-columns:1fr;gap:18px}.card,.level,.panel{padding:22px}.level img{width:calc(100% + 44px);margin:-22px -22px 16px}.team-card{gap:16px;min-height:126px}.team-photo{width:60px;height:60px;flex-basis:60px;font-size:11px}.rolling-gallery{gap:14px;animation-duration:28s}.rolling-item{flex-basis:132px}.photo-upload{grid-template-columns:1fr}.photo-preview{width:min(100%,180px);margin:auto}.gallery-highlights{gap:16px;--circle:92px;--ring:5px}.gallery-highlight{min-width:104px;gap:8px}.highlight-label{font-size:13px}.gallery-stage{grid-template-columns:40px minmax(0,1fr) 40px;gap:0;width:100%}.gallery-stage img{max-width:100%;max-height:68vh}.gallery-nav{width:40px;height:40px;font-size:28px}.gcircle img{width:min(68vw,220px);height:min(68vw,220px)}.strip{margin:0;padding:32px 18px;border-radius:20px}.strip h2{font-size:25px}.foot-grid{gap:20px}.admission-modal{padding:12px;align-items:start;overflow:auto}.admission-dialog{width:100%;max-height:none;margin:58px 0 12px;padding:18px;border-radius:16px}.admission-close{top:10px;right:12px}.admission-form fieldset{padding:14px}}
+        @media(max-width:767px){.container{padding:0 16px}.nav-inner{padding:10px 16px}.logo{font-size:14px;letter-spacing:1px;min-width:0}.logo .mark{width:44px;height:44px}.logo small{letter-spacing:4px}.hero{padding:48px 0 105px}.brand-title{font-size:clamp(34px,12vw,44px);letter-spacing:5px;margin-right:-5px;padding-left:0;overflow-wrap:anywhere}.brand-sub{font-size:14px;letter-spacing:18px;margin-right:-18px;padding-left:0}.brand-tag{font-size:16px;gap:12px;margin-bottom:30px;flex-wrap:nowrap}.brand-tag .ln{width:70px}.hero-cta,.form-actions{align-items:stretch;flex-direction:column}.btn{min-height:44px;justify-content:center;padding:12px 20px}.sec-head{margin-bottom:28px}.sec-head h2{font-size:28px;line-height:1.2}section.pad{padding:48px 0}.cards,.levels,.eyfs,.gallery{grid-template-columns:1fr;gap:18px}.card,.level,.panel{padding:22px}.level img{width:calc(100% + 44px);margin:-22px -22px 16px}.team-card{gap:16px;min-height:126px}.team-photo{width:60px;height:60px;flex-basis:60px;font-size:11px}.rolling-gallery{gap:14px;animation-duration:28s}.rolling-item{flex-basis:132px}.photo-upload{grid-template-columns:1fr}.photo-preview{width:min(100%,180px);margin:auto}.gallery-highlights{gap:16px;--circle:92px;--ring:5px}.gallery-highlight{min-width:104px;gap:8px}.highlight-label{font-size:13px}.gallery-stage{grid-template-columns:40px minmax(0,1fr) 40px;gap:0;width:100%}.gallery-stage img{max-width:100%;max-height:68vh}.gallery-nav{width:40px;height:40px;font-size:28px}.gcircle img{width:min(68vw,220px);height:min(68vw,220px)}.strip{margin:0;padding:32px 18px;border-radius:20px}.strip h2{font-size:25px}.foot-grid{gap:20px}.admission-modal{padding:12px;align-items:start;overflow:auto}.admission-dialog{width:100%;max-height:none;margin:58px 0 12px;padding:18px;border-radius:16px}.admission-close{top:10px;right:12px}.admission-form fieldset{padding:14px}}
         main{background:linear-gradient(180deg,#fbfcfd 0%,#f7fbff 34%,#fffaf0 68%,#fbfcfd 100%)}
         main section.pad{position:relative;overflow:hidden;padding:86px 0;background:radial-gradient(circle at 8% 18%,rgba(246,180,30,.12) 0 52px,transparent 53px),radial-gradient(circle at 92% 12%,rgba(46,90,117,.10) 0 64px,transparent 65px),linear-gradient(180deg,rgba(255,255,255,.74),rgba(234,244,251,.62))}
         main section.pad:nth-of-type(even){background:radial-gradient(circle at 12% 80%,rgba(255,158,196,.12) 0 58px,transparent 59px),radial-gradient(circle at 88% 70%,rgba(57,194,180,.12) 0 68px,transparent 69px),linear-gradient(180deg,rgba(255,250,240,.82),rgba(255,255,255,.9))}
@@ -221,7 +239,6 @@ fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => 
         main section.pad .sec-head{position:relative;max-width:780px;margin:0 auto 42px;text-align:center}
         main section.pad .sec-head::after{content:"";display:block;width:min(230px,46vw);height:10px;margin:16px auto 0;border-radius:999px;background:linear-gradient(90deg,var(--yellow),#fff3dd,var(--teal),#e2f8f5)}
         main section.pad .eyebrow{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(46,90,117,.12);font-size:30px;box-shadow:0 8px 20px rgba(31,66,87,.08);padding:7px 14px;color:var(--teal-dark)}
-        main section.pad .eyebrow::before{content:"★";color:var(--yellow);font-size:25px}
         main section.pad .sec-head h2{font-size:clamp(30px,4vw,48px);line-height:1.12;color:var(--navy);margin-top:14px}
         main section.pad .sec-head p{font-size:clamp(16px,1.7vw,19px);line-height:1.75;color:#5f687c;max-width:760px}
         main section.pad .cards,main section.pad .levels,main section.pad .two-col,main section.pad .eyfs,main section.pad .gallery{align-items:stretch;justify-content:center}
@@ -236,7 +253,7 @@ fetch(__BASE ? __BASE + '/data/site.json' : '/data/site.json').then(response => 
         main section.pad .panel img{border-radius:24px!important;border:6px solid rgba(255,255,255,.9);box-shadow:0 18px 36px rgba(31,66,87,.16)}
         #founder .founder-photo{display:block;width:min(100%,220px);aspect-ratio:4/5;margin:0 auto 18px;border-radius:22px!important;object-fit:cover;object-position:center top}
         @media(max-width:767px){#founder .founder-photo{width:min(72vw,190px)}}
-       main section.pad .level{position:relative;overflow:hidden;min-height:100%;border-radius:30px;padding:26px 22px 30px;box-shadow:0 20px 44px rgba(31,66,87,.16);transition:transform .24s ease,box-shadow .24s ease,filter .24s ease}
+        main section.pad .level{position:relative;overflow:hidden;min-height:100%;border-radius:30px;padding:26px 22px 30px;box-shadow:0 20px 44px rgba(31,66,87,.16);transition:transform .24s ease,box-shadow .24s ease,filter .24s ease}
 main section.pad .level:hover{transform:translateY(-9px) rotate(-.5deg);box-shadow:0 28px 58px rgba(31,66,87,.22);filter:saturate(1.06)}
 main section.pad .level img{display:block;width:calc(100% + 44px);max-width:calc(100% + 44px);margin:-26px -22px 20px;border:0;border-radius:0;box-shadow:none;aspect-ratio:4/3;object-fit:cover;transition:transform .28s ease,opacity .28s ease}
 main section.pad .level:hover img{transform:scale(1.035)}
@@ -247,8 +264,6 @@ main section.pad .level:hover img{transform:scale(1.035)}
         main section.pad .gcircle:hover{transform:translateY(-7px) rotate(0deg);box-shadow:0 24px 48px rgba(31,66,87,.17)}
         main section.pad .gcircle img{border-radius:22px;border:0;width:clamp(150px,20vw,220px);height:clamp(150px,20vw,220px)}
         main section.pad .strip{border-radius:34px;background:linear-gradient(135deg,var(--teal),#3a6a86 52%,#f6b41e);box-shadow:0 22px 54px rgba(31,66,87,.18)}
-        main section.pad .btn,.admission-modal .btn{border-radius:999px;min-height:46px;box-shadow:0 12px 26px rgba(246,180,30,.24);transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease}
-        main section.pad .btn:hover,.admission-modal .btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 18px 34px rgba(246,180,30,.34)}
         .admission-dialog{border-radius:30px;border:1px solid rgba(46,90,117,.12);box-shadow:0 26px 70px rgba(31,66,87,.22)}
         .admission-form fieldset{border-color:rgba(46,90,117,.14);border-radius:22px;background:linear-gradient(145deg,#fff,#fbfcfd)}
         .form-field input,.form-field select,.form-field textarea{border-radius:16px;border-color:rgba(46,90,117,.16)}
@@ -383,7 +398,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
         
         /* 🌙 Night Sky Footer */
         footer {
-          background: linear-gradient(180deg, #1A237E 0%, #0D47A1 100%) !important;
+          background: #2e5a75 !important;
           color: #FFF !important;
           overflow: hidden;
           border-top: 8px wavy #FFF;
@@ -421,18 +436,18 @@ main section.pad .level:hover img{transform:scale(1.035)}
           box-shadow: 0 20px 40px rgba(0,0,0,0.25) !important;
         }
 
-        /* 🔘 Bouncy Pill Buttons (Excluded from Hero) */
-        main section.pad .btn, .admission-modal .btn {
+        /* 🔘 Bouncy Pill Buttons */
+        .hero .btn, main section.pad .btn, .admission-modal .btn {
           border-radius: 999px !important;
           background: linear-gradient(135deg, #FFB74D, #FF8A65) !important;
           color: #FFF !important;
           font-family: 'Montserrat', Arial, sans-serif;
           font-weight: 600;
-          border: 3px solid #FFF;
+          border: none !important;
           box-shadow: 0 8px 20px rgba(255, 138, 101, 0.4) !important;
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
-        main section.pad .btn:hover, .admission-modal .btn:hover {
+        .hero .btn:hover, main section.pad .btn:hover, .admission-modal .btn:hover {
           transform: translateY(-5px) scale(1.05) !important;
           box-shadow: 0 12px 28px rgba(255, 138, 101, 0.6) !important;
           filter: brightness(1.1);
@@ -448,17 +463,6 @@ main section.pad .level:hover img{transform:scale(1.035)}
         }
         .scenery-rainbow { position: absolute; top: -10%; left: -5%; opacity: 0.3; width: 400px; }
         .scenery-star { position: absolute; animation: twinkle 3s ease-in-out infinite alternate; }
-        
-        /* 🧸 Mascots, Kids, and Toys Layer */
-        .character-layer img {
-          position: absolute; z-index: 1; pointer-events: none;
-          filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-        }
-        .kid-bottom-left { bottom: 0; left: 2%; width: 180px; }
-        .kid-bottom-right { bottom: 0; right: 2%; width: 180px; }
-        .mascot-float { top: 15%; right: 8%; width: 120px; animation: kvIllFloat 6s ease-in-out infinite; }
-        .toy-scatter-1 { bottom: 10%; left: 15%; width: 80px; transform: rotate(-15deg); }
-        .toy-scatter-2 { top: 20%; left: 5%; width: 60px; transform: rotate(25deg); }
         
         @keyframes driftClouds { from { transform: translateX(-150px); } to { transform: translateX(120vw); } }
         @keyframes twinkle { 0% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
@@ -482,6 +486,81 @@ main section.pad .level:hover img{transform:scale(1.035)}
         main section.pad .card.kv-info-card .kv-info-toggle[aria-expanded="true"]::after{transform:rotate(225deg)}
         main section.pad .card.kv-info-card .kv-info-toggle:focus-visible{border-radius:8px;outline:3px solid rgba(246,180,30,.42)}
         @media(prefers-reduced-motion:reduce){main section.pad .card.kv-info-card .kv-info-body{transition:none}}
+
+        /* =========================================================
+           🧸 RESPONSIVE FLOATING DECORATIONS (Overlap Prevention)
+           ========================================================= */
+        .floating-decor { transition: all 0.3s ease; }
+        
+        /* Base positioning for desktop */
+        .f-bl { bottom: 5%; left: 5%; font-size: 6rem; }
+        .f-tr { top: 15%; right: 8%; font-size: 5rem; }
+        .f-tl { top: 10%; left: 5%; font-size: 5rem; }
+        .f-br { bottom: 10%; right: 8%; font-size: 6rem; }
+        .f-ml { top: 40%; left: 8%; font-size: 4rem; }
+        .f-mr { top: 40%; right: 8%; font-size: 4rem; }
+        
+        .footer-teddy { position:absolute; bottom:5%; left:2%; font-size:7rem; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15)); transform: rotate(-10deg); z-index: 0; pointer-events: none; }
+
+        /* Tablet Adjustments */
+        @media (max-width: 1024px) {
+           .f-bl, .f-tr, .f-tl, .f-br, .f-ml, .f-mr { font-size: 3.5rem !important; }
+           .f-bl { left: 2%; } .f-tr { right: 2%; }
+           .f-tl { left: 2%; } .f-br { right: 2%; }
+           .f-ml { left: 2%; } .f-mr { right: 2%; }
+        }
+
+        /* Mobile Adjustments (Avoid overlapping text) */
+        @media (max-width: 767px) {
+           .f-bl, .f-tr, .f-tl, .f-br { font-size: 2rem !important; opacity: 0.6; }
+           
+           /* Force into the 56px section padding space (top/bottom) so they never touch text */
+           .f-bl { bottom: 8px !important; left: 10px !important; }
+           .f-tr { top: 8px !important; right: 10px !important; }
+           .f-tl { top: 8px !important; left: 10px !important; }
+           .f-br { bottom: 8px !important; right: 10px !important; }
+           
+           /* Hide mid-level floaters that would sit right behind text */
+           .f-ml, .f-mr { display: none !important; }
+           
+           .footer-teddy { font-size: 3rem !important; bottom: 10px !important; left: 10px !important; opacity: 0.5; }
+
+           /* Shrink and reposition SVGs to safe zones */
+           main section.pad .kv-deco { opacity: 0.15 !important; transform: scale(0.4) !important; }
+           main section.pad .deco-one { top: 0px; left: 20px; }
+           main section.pad .deco-two { bottom: 0px; right: 20px; }
+           main section.pad .deco-three { display: none !important; }
+           main section.pad .deco-four { top: 0px; right: 20px; }
+           main section.pad .deco-five { bottom: 0px; left: 20px; }
+           
+           .scenery-cloud { top: 2% !important; opacity: 0.8 !important; height: 30px !important; }
+           .scenery-star { opacity: 0.4 !important; font-size: 1.2rem !important; }
+        }
+
+        /* Specific iPhone SE / Ultra-narrow viewport (375x667) */
+        @media (max-width: 380px) {
+           .f-bl, .f-tr, .f-tl, .f-br { font-size: 1.5rem !important; opacity: 0.5; }
+           .f-bl { bottom: 4px !important; left: 4px !important; }
+           .f-tr { top: 4px !important; right: 4px !important; }
+           .f-tl { top: 4px !important; left: 4px !important; }
+           .f-br { bottom: 4px !important; right: 4px !important; }
+           .footer-teddy { font-size: 2.2rem !important; bottom: 5px !important; left: 5px !important; opacity: 0.3; }
+           
+           /* Aggressively hide complex shapes to guarantee 100% clean reading */
+           main section.pad .kv-deco { display: none !important; } 
+           .scenery-cloud, .scenery-star { display: none !important; }
+           .mailbox-deco, .paperplane-deco { display: none !important; }
+        }
+
+        /* Hero Section - Increase Cloud Visibility */
+        .hero .sky-layer .cloud {
+          opacity: 0.75 !important;
+        }
+
+        /* Footer - Make Clouds Static */
+        footer .sky-layer, footer .sky-layer .cloud {
+          animation-play-state: paused !important;
+        }
       `;
       document.head.appendChild(s);
     }
@@ -651,15 +730,13 @@ main section.pad .level:hover img{transform:scale(1.035)}
 
     function header() {
       const links = navSections.map(([id, label]) => hashLink(`#${id}`, label)).join('');
-      const portal = `<a href="${data.school.portalUrl}" class="btn btn-primary nav-cta">Portal</a>`;
-      return `<nav aria-label="Primary navigation" style="position:fixed;top:0;right:0;left:0;z-index:60;background:rgba(46,90,117,.98);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(31,66,87,.16);min-height:64px;"><div class="nav-inner" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:05px 20px;max-width:1400px;margin:0 auto;width:100%;box-sizing:border-box;">${logoLockup()}<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-menu" aria-label="Open navigation"><span></span><span></span><span></span></button><div class="nav-links" id="primary-menu">${links}${portal}</div></div></nav><div aria-hidden="true" style="height:50px"></div>`;}
+      const portal = `<a href="${data.school.portalUrl}" class="btn btn-primary nav-cta ">Portal</a>`;
+      return `<nav aria-label="Primary navigation" style="position:fixed;top:0;right:0;left:0;z-index:60;background:rgba(46,90,117,.98);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(31,66,87,.16);min-height:64px;"><div class="nav-inner" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:05px 20px;max-width:1400px;margin:0 auto;width:100%;box-sizing:border-box;">${logoLockup()}<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="primary-menu" aria-label="Open navigation"><span></span><span></span><span></span></button><div class="nav-links" id="primary-menu">${links}${portal}</div></div></nav><div aria-hidden="true" style="height:30px"></div>`;}
     
-    function hero(title = 'KINDERVALE', subtitle = 'PRESCHOOL', tag = data.school.tagline, admissionModal = false, admissionSource = 'General Admissions') {
+    function hero(title = 'KINDERVALE', subtitle = 'PRESCHOOL', tag = 'Celebrating Childhood', admissionModal = false, admissionSource = 'General Admissions') {
       const admissionCta = admissionModal ? `<button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(admissionSource)}">Admissions</button>` : hashLink('#admissions', 'Admissions', 'btn btn-primary');
-      return `<header class="hero" id="home"><div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div><div class="hero-lockup"><img class="hero-birds" src="${data.images.logo}" alt="" width="120" height="120"><h1 class="brand-title">${escape(title)}</h1><div class="brand-sub">${escape(subtitle)}</div><div class="brand-tag"></div><div class="hero-cta">${admissionCta}</div></div></header>`;
-    }
-   
-    const sectionDecor = id => {
+      const tagContent = tag ? `<span class="ln"></span>${escape(tag)}<span class="ln"></span>` : '';
+      return `<header class="hero" id="home" height= 1500px><div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div><div class="hero-lockup"><img class="hero-birds" src="${data.images.logo}" alt="" width="120" height="120"><h1 class="brand-title">${escape(title)}</h1><div class="brand-sub">${escape(subtitle)}</div><div class="brand-tag">${tagContent}</div><div class="hero-cta">${admissionCta}</div></div><div class="wave"><img src="/clouds/cloud.png" alt="Decorative clouds" width=100% height=auto></div></header>`;} const sectionDecor = id => {
       const [topIcon, bottomIcon] = kvSectionIcons[id || ''] || kvSectionIcons[''];
       const topSvg = (kvIcons[topIcon] && kvIcons[topIcon]()) || '';
       const bottomSvg = (kvIcons[bottomIcon] && kvIcons[bottomIcon]()) || '';
@@ -668,52 +745,52 @@ main section.pad .level:hover img{transform:scale(1.035)}
     
     const sectionTheme = id => `theme-${id || 'story'}`;
 
-    /* ─── Magical Preschool Dynamic Decorations Injector (Fixed 404s) ─── */
+    /* ─── Magical Preschool Dynamic Decorations Injector ─── */
     const magicalDecor = (id) => {
       let scenery = '';
       let characters = '';
 
-      const createFloat = (emoji, style) => `<div style="position:absolute; font-size:4.5rem; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15)); z-index:1; pointer-events:none; ${style}">${emoji}</div>`;
+      const createFloat = (emoji, baseClass, extraStyle='') => `<div class="floating-decor ${baseClass}" style="position:absolute; z-index:0; pointer-events:none; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15)); ${extraStyle}">${emoji}</div>`;
 
       switch(id) {
         case 'about':
-          scenery = `<div class="scenery-cloud" style="width:200px; height:60px; top:10%; left:-10%;"></div>
-                     <div class="scenery-cloud" style="width:150px; height:50px; top:40%; animation-duration: 50s;"></div>`;
+          scenery = `<div class="scenery-cloud" style="width:200px; height:60px; top:5%; left:-10%;"></div>
+                     <div class="scenery-cloud" style="width:150px; height:50px; top:85%; animation-duration: 50s;"></div>`;
           characters = `
-            ${createFloat('📖', 'bottom: 5%; left: 5%; font-size: 6rem; transform: rotate(-10deg);')}
-            ${createFloat('🐰', 'top: 15%; right: 8%; animation: kvIllFloat 6s ease-in-out infinite;')}
-            ${createFloat('🧱', 'bottom: 10%; left: 15%; font-size: 3rem; transform: rotate(15deg);')}
+            ${createFloat('📖', 'f-bl', 'transform: rotate(-10deg);')}
+            ${createFloat('🐰', 'f-tr', 'animation: kvIllFloat 6s ease-in-out infinite;')}
+            ${createFloat('🧱', 'f-ml', 'transform: rotate(15deg);')}
           `;
           break;
         case 'levels':
           characters = `
-            ${createFloat('🧩', 'bottom: 5%; right: 5%; font-size: 6rem; transform: rotate(10deg);')}
-            ${createFloat('🦉', 'top: 10%; left: 5%; animation: kvIllFloat 6s ease-in-out infinite;')}
-            ${createFloat('🚂', 'top: 20%; left: 15%; font-size: 4rem; transform: rotate(-15deg);')}
+            ${createFloat('🧩', 'f-br', 'transform: rotate(10deg);')}
+            ${createFloat('🦉', 'f-tl', 'animation: kvIllFloat 6s ease-in-out infinite;')}
+            ${createFloat('🚂', 'f-mr', 'transform: rotate(-15deg);')}
           `;
           break;
         case 'team':
           characters = `
-            ${createFloat('🎨', 'bottom: 5%; left: 5%; font-size: 6rem;')}
-            ${createFloat('🐘', 'top: 15%; right: 8%; animation: kvIllFloat 7.5s ease-in-out infinite;')}
+            ${createFloat('🎨', 'f-bl')}
+            ${createFloat('🐘', 'f-tr', 'animation: kvIllFloat 7.5s ease-in-out infinite;')}
           `;
           break;
         case 'gallery':
-          scenery = `<div class="scenery-star" style="top:20%; left:20%; font-size:30px; color:#FFD54F;">✨</div>
-                     <div class="scenery-star" style="top:70%; right:15%; font-size:40px; color:#CE93D8; animation-delay:1s;">✨</div>`;
+          scenery = `<div class="scenery-star" style="top:10%; left:20%; font-size:30px; color:#FFD54F;">✨</div>
+                     <div class="scenery-star" style="bottom:10%; right:15%; font-size:40px; color:#CE93D8; animation-delay:1s;">✨</div>`;
           characters = `
-            ${createFloat('🎈', 'bottom: 10%; right: 10%; font-size: 6rem; animation: kvIllFloat 5s ease-in-out infinite;')}
-            ${createFloat('🦜', 'top: 15%; left: 10%; animation: kvIllFloat 6s ease-in-out infinite;')}
+            ${createFloat('🎈', 'f-br', 'animation: kvIllFloat 5s ease-in-out infinite;')}
+            ${createFloat('🦜', 'f-tl', 'animation: kvIllFloat 6s ease-in-out infinite;')}
           `;
           break;
         case 'admissions':
           characters = `
-            ${createFloat('🎒', 'bottom: 5%; left: 5%; font-size: 6rem;')}
-            ${createFloat('✈️', 'top: 20%; left: 10%; font-size: 4rem; transform: rotate(25deg);')}
+            ${createFloat('🎒', 'f-bl')}
+            ${createFloat('✈️', 'f-ml', 'transform: rotate(25deg);')}
           `;
           break;
         default:
-          characters = `${createFloat('⭐', 'top: 15%; right: 8%; animation: kvIllFloat 6s ease-in-out infinite;')}`;
+          characters = `${createFloat('⭐', 'f-tr', 'animation: kvIllFloat 6s ease-in-out infinite;')}`;
       }
 
       return `<div class="magical-scene" aria-hidden="true">${scenery}</div>
@@ -722,18 +799,15 @@ main section.pad .level:hover img{transform:scale(1.035)}
 
     /* Magical section wrapper */
     function section(title, eyebrow, body, id = '') { 
-      return `<section class="pad ${sectionTheme(id)}" ${id ? `id="${id}"` : ''}>
-                ${magicalDecor(id)}
-                ${sectionDecor(id)}
-                <div class="container" style="position:relative; z-index:10;">
-                  <div class="sec-head">
-                    <span class="eyebrow">${escape(eyebrow)}</span>
-                    
-                  </div>
-                  ${body}
-                </div>
-              </section>`; 
-    }
+  return `<section class="pad ${sectionTheme(id)}" ${id ? `id="${id}"` : ''}>
+            ${magicalDecor(id)}
+            ${sectionDecor(id)}
+            <div class="container" style="position:relative; z-index:10;">
+              ${eyebrow ? `<div class="sec-head"><span class="eyebrow">${escape(eyebrow)}</span></div>` : ''}
+              ${body}
+            </div>
+          </section>`; 
+}
 
     function textCard(title, text) { return `<article class="card"><span class="card-icon" aria-hidden="true"></span><h3>${escape(title)}</h3><p>${escape(text)}</p></article>`; }
     function teamNode(member, className = '') {
@@ -763,10 +837,10 @@ main section.pad .level:hover img{transform:scale(1.035)}
       return section('', 'Mission, Vision & Values', `<div class="cards" data-mobile-collapse>${infoCard('Our Mission', data.mission)}${infoCard('Our Vision', data.vision)}${infoCard('Our Values', data.values, {list: true})}</div>`, 'mission-vision');
     }
     function founder() { return section(' ', "Founder's Message", `<div class="two-col"><div class="panel" data-mobile-collapse><img class="founder-photo" src="${escape(data.images.founder)}" alt="${escape(data.founder.name)}, ${escape(data.founder.title)}" loading="lazy" decoding="async"><h3>${escape(data.founder.name)}</h3><p class="desc">${escape(data.founder.title)}</p><div data-expandable-text>${data.founder.career.map(p => `<p style="margin-top:14px">${escape(p)}</p>`).join('')}</div></div><div class="panel founder-message" data-mobile-collapse><h3>Dear Parents,</h3><div class="founder-message-content" id="founder-message-content" data-expandable-text>${data.founder.message.map(p => `<p style="margin-bottom:14px">${escape(p)}</p>`).join('')}<p><strong>${escape(data.founder.name)}</strong></p></div></div></div>`, 'founder'); }
-    function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><h3 style="font-size:30px">Early Years Foundation Stage<br></h3><p>${escape(data.curriculum.summary)}</p></div><h3 style="font-size:31px; text-align:center;">Area's of Development<br><br></h3><div class="eyfs">${data.curriculum.areas.map((area, index) => `<div><span>${['♥','★','✦','●','◎','✿','○'][index]}</span>${escape(area)}</div>`).join('')}</div>`, 'curriculum'); }
+    function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><h3 style="font-size:30px">Early Years Foundation Stage<br></h3><p>${escape(data.curriculum.summary)}</p></div><h2 style="font-size:31px; text-align:center;">Areas of Development</h2><br>${data.curriculum.areas.map((area, index) => `<div style="text-align:center;"><span>${[' ',' ',' ',' ',' ',' ',' '][index]}</span>${escape(area)}</div>`).join('')}`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="${__BASE ? __BASE + '/' : '/'}levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p>`, 'levels');
+      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
@@ -784,25 +858,23 @@ main section.pad .level:hover img{transform:scale(1.035)}
       return section('', 'Gallery', `${body}`, 'gallery');
     }
     function facilities() { return section('', 'School Facilities', `<div class="cards"><article class="card"><span class="card-icon" aria-hidden="true"></span><h3>Our Facilities</h3><ul>${data.facilities.map(item => `<li>${escape(item)}</li>`).join('')}</ul></article></div>`, 'facilities'); }
-    function team() {
-      const byRole = role => data.team.find(member => member.role === role);
-      const row = (roles, className = '') => `<div class="team-chart-row">${roles.map(role => teamNode(byRole(role), className)).join('')}</div>`;
-      return section('The Kindervale Team', 'Our Team', `<div class="team-chart">${row(['CEO/Principal'], 'lead')}${row(['Admin/HR Head', 'Academic Co-ordinator'])}${row(['Accounts Manager', 'Operations Head', 'Admissions Officer & Asst. Head', 'Head Teacher'])}${row(['Asst. Accounts Manager', 'Supervisor', 'Cashier', 'Computer Operator'])}${row(['School Teachers', 'Daycare Teachers', 'Asst. Teachers', 'Nannies'], 'group')}${row(['Sports Teacher', 'Driver', 'Office Boy', 'Security Guard'])}</div>`, 'team');
-    }
-    function fees() { return section('', 'Fee Structure', `<div class="cards">${data.fees.items.map(([label, amount]) => textCard(label, amount)).join('')}</div><div class="panel" style="margin-top:15px"><h3>Notes</h3><ol>${data.fees.notes.map(note => `<li>${escape(note)}</li>`).join('')}</ol></div>`, 'fees'); }
     function admissions() { return section('', 'Admissions', `<div class="two-col"><article class="panel"><h3>Plan your visit</h3><p>${escape(data.admissions.tour)}</p><p style="margin-top:14px"><strong>Office hours</strong></p>${data.admissions.officeHours.map(item => `<p>${escape(item)}</p>`).join('')}<p style="margin-top:20px"><button type="button" class="btn btn-primary" data-open-admission>Admission Form</button></p></article><article class="panel" data-mobile-collapse><h3>Contact us</h3><p>${escape(data.school.address)}</p><p style="margin-top:12px"><a href="tel:${data.school.phone.replace(/\s/g, '')}">${escape(data.school.phone)}</a></p><p><a href="tel:${data.school.landline.replace(/\s/g, '')}">${escape(data.school.landline)}</a></p><p><a href="mailto:${data.school.email}">${escape(data.school.email)}</a></p></article></div>`, 'admissions'); }
+    function fees() { return section('', 'Fee Structure', `<div class="cards">${data.fees.items.map(([label, amount]) => textCard(label, amount)).join('')}</div><div class="panel" style="margin-top:15px"><h3>Notes</h3><ol>${data.fees.notes.map(note => `<li>${escape(note)}</li>`).join('')}</ol></div>`, 'fees'); }
+    function team() {
+  const byRole = role => data.team.find(member => member.role === role);
+  const row = (roles, className = '') => `<div class="team-chart-row">${roles.map(role => teamNode(byRole(role), className)).join('')}</div>`;
+  const visibleRows = `${row(['CEO/Principal'], 'lead')}${row(['Admin/HR Head', 'Academic Co-ordinator'])}`;
+  const hiddenRows = `${row(['Accounts Manager', 'Operations Head', 'Admissions Officer & Asst. Head', 'Head Teacher'])}${row(['Asst. Accounts Manager', 'Supervisor', 'Cashier', 'Computer Operator'])}${row(['School Teachers', 'Daycare Teachers', 'Asst. Teachers', 'Nannies'], 'group')}${row(['Sports Teacher', 'Driver', 'Office Boy', 'Security Guard'])}`;
+  return section('The Kindervale Team', 'Our Team', `<div class="team-chart">${visibleRows}<div class="team-more" id="team-more" inert>${hiddenRows}</div><button type="button" class="btn btn-primary team-toggle" id="team-toggle" aria-expanded="false" aria-controls="team-more">Show More <span class="team-toggle-icon" aria-hidden="true">▼</span></button></div>`, 'team');
+}
     function consultancy() { return section('Kindervale Consultancy', 'Consultancy', `<div class="sec-head" data-mobile-collapse><p>${escape(data.consultancy.summary)}</p></div><div class="cards">${data.consultancy.services.map(service => textCard(service[0], service[1])).join('')}</div>`, 'consultancy'); }
     
     function footer() { 
       return `<footer id="contact">
-                <div class="magical-scene" aria-hidden="true">
-                  <div class="scenery-star" style="top:15%; left:10%; font-size:24px;">⭐</div>
-                  <div class="scenery-star" style="top:40%; left:80%; font-size:32px; animation-delay:1.5s;">⭐</div>
-                  <div class="scenery-star" style="top:60%; left:25%; font-size:20px; animation-delay:0.5s;">⭐</div>
-                </div>
+          
+                <div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div></header>
                 <div class="character-layer" aria-hidden="true">
-                  <div style="position:absolute; top:10%; right:10%; font-size:6rem; filter:drop-shadow(0 0 20px #FFF);">🌙</div>
-                  <div style="position:absolute; bottom:5%; left:2%; font-size:7rem; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.15)); transform: rotate(-10deg);">🧸</div>
+                  <div class="footer-teddy">🧸</div>
                 </div>
                 <span class="kv-deco kv-illustration mailbox-deco anim-sway" aria-hidden="true">${kvIcons.mailbox()}</span>
                 <span class="kv-deco kv-illustration paperplane-deco anim-float" aria-hidden="true">${kvIcons.paperPlane()}</span>
@@ -828,13 +900,12 @@ main section.pad .level:hover img{transform:scale(1.035)}
                       ${hashLink('#contact', 'Contact')}
                     </div>
                   </div>
-                  <div class="foot-bottom">© ${new Date().getFullYear()} Kindervale Preschool</div>
-                </div>
+                  <div style="text-align:center;opacity:0.5;padding-bottom:20px;padding-top:0px;">© ${new Date().getFullYear()} Kindervale Preschool</div>
+               </div>
               </footer>`; 
     }
     
-    function home() { return `${hero()}${rollingImages()}${about()}${founder()}${missionVision()}${curriculum()}${levels()}${gallery()}${facilities()}${team()}${fees()}${admissions()}${consultancy()}${footer()}${lightbox()}`; }
-    function lightbox() { return `<div class="lightbox gallery-viewer" role="dialog" aria-modal="true" aria-label="Gallery image viewer" hidden><button type="button" class="lightbox-close" aria-label="Close gallery image">×</button><div class="gallery-viewer-title"></div><div class="gallery-stage"><button type="button" class="gallery-nav gallery-prev" aria-label="Previous image">‹</button><img src="" alt=""><button type="button" class="gallery-nav gallery-next" aria-label="Next image">›</button></div><p></p><div class="gallery-counter" aria-live="polite"></div></div>`; }
+    function home() { return `${hero()}${rollingImages()}${about()}${missionVision()}${founder()}${curriculum()}${levels()}${facilities()}${admissions()}${fees()}${team()}${gallery()}${consultancy()}${footer()}${lightbox()}`; }function lightbox() { return `<div class="lightbox gallery-viewer" role="dialog" aria-modal="true" aria-label="Gallery image viewer" hidden><button type="button" class="lightbox-close" aria-label="Close gallery image">×</button><div class="gallery-viewer-title"></div><div class="gallery-stage"><button type="button" class="gallery-nav gallery-prev" aria-label="Previous image">‹</button><img src="" alt=""><button type="button" class="gallery-nav gallery-next" aria-label="Next image">›</button></div><p></p><div class="gallery-counter" aria-live="polite"></div></div>`; }
     function admissionModal() {
       const field = (id, label, type = 'text', required = false, attrs = '') => `<div class="form-field"><label for="${id}">${label}${required ? ' *' : ''}</label><input id="${id}" name="${id}" type="${type}" ${required ? 'required' : ''} ${attrs}><span class="form-error" data-error-for="${id}"></span></div>`;
       const area = (id, label, required = false) => `<div class="form-field"><label for="${id}">${label}${required ? ' *' : ''}</label><textarea id="${id}" name="${id}" ${required ? 'required' : ''}></textarea><span class="form-error" data-error-for="${id}"></span></div>`;
@@ -870,19 +941,18 @@ main section.pad .level:hover img{transform:scale(1.035)}
 
     function render(path = location.pathname, options = {}) {
       if (activeObserver) activeObserver.disconnect();
-      /* Strip __BASE prefix to match routes cleanly */
-      const stripped = __BASE && path.startsWith(__BASE) ? path.replace(__BASE, '') || '/' : path;
-      const clean = stripped === '/kindervale.html' ? '/' : stripped.replace(/\/$/, '') || '/';
+      const clean = path === '/kindervale.html' ? '/' : path.replace(/\/$/, '') || '/';
       const level = data.levels.find(item => `/levels/${item.slug}` === clean);
       const content = level ? levelPage(level) : home();
       setAdmissionSource(level ? level.name : 'General Admissions');
       site.innerHTML = `${header()}<main id="main-content" tabindex="-1">${content}</main>${admissionModal()}`;
       document.title = pageTitle(level ? clean : '/');
       updateMeta(level ? clean : '/');
-      wireNavigation();
+        wireNavigation();
       wireLightbox();
       wireAdmissionModal();
       wireInfoCards(site);
+      wireTeamToggle(site);
       enhanceMedia(site);
       applyMobileCollapse();
       applyExpandableText(site);
@@ -1000,6 +1070,41 @@ main section.pad .level:hover img{transform:scale(1.035)}
         if (event.key === 'ArrowRight') show(index + 1);
       });
     }
+
+    function wireTeamToggle(root = site) {
+  const button = $('#team-toggle', root);
+  const panel = $('#team-more', root);
+  if (!button || !panel) return;
+  button.addEventListener('click', () => {
+    const expanding = button.getAttribute('aria-expanded') !== 'true';
+    if (expanding) {
+      panel.inert = false;
+      panel.classList.add('is-open');
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+      button.setAttribute('aria-expanded', 'true');
+      button.innerHTML = 'Show Less <span class="team-toggle-icon" aria-hidden="true">▲</span>';
+    } else {
+      panel.style.maxHeight = `${panel.scrollHeight}px`;
+      void panel.offsetHeight;
+      panel.classList.remove('is-open');
+      panel.style.maxHeight = '0px';
+      panel.inert = true;
+      button.setAttribute('aria-expanded', 'false');
+      button.innerHTML = 'Show More <span class="team-toggle-icon" aria-hidden="true">▼</span>';
+      const teamSection = panel.closest('section.pad');
+      if (teamSection) {
+        const navHeight = $('nav')?.offsetHeight || 0;
+        const top = teamSection.getBoundingClientRect().top + window.scrollY - navHeight - 12;
+        if (window.scrollY > top) window.scrollTo({top: Math.max(0, top), behavior: 'smooth'});
+      }
+    }
+  });
+}
+
+function updateTeamMoreHeight(root = site) {
+  const panel = $('#team-more', root);
+  if (panel && panel.classList.contains('is-open')) panel.style.maxHeight = `${panel.scrollHeight}px`;
+}
 
     function updateNavbarState() {
       const nav = $('nav');
@@ -1149,7 +1254,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
         const payload = new FormData(form);
         payload.set('admissionSource', sourceField?.value || getAdmissionSource());
         try {
-          const response = await fetch(__BASE ? `${__BASE}/api/admission` : '/api/admission', {
+          const response = await fetch('/api/admission', {
             method: 'POST',
             body: payload
           });
@@ -1182,7 +1287,18 @@ main section.pad .level:hover img{transform:scale(1.035)}
 
    function levelPage(level) {
   const galleryItems = data.images.gallery.slice(0, 3);
-  return `${hero(level.name.toUpperCase(), 'PROGRAMME', `Age ${level.age}`, true, level.name)}${section(level.name, 'Overview', `<div class="two-col"><article class="panel" data-mobile-collapse><h3>Overview</h3><p>${escape(level.overview)}</p><h3 style="margin-top:20px">Age group</h3><p>${escape(level.age)}</p><h3 style="margin-top:20px">Timings</h3><p>${escape(level.timings)}</p></article><article class="panel" data-mobile-collapse><h3 style="margin-top:20px">Learning objectives</h3><ol>${level.objectives.map(item => `<li>${escape(item)}</li>`).join('')}</ol></article></div><div class="gallery" style="margin-top:34px">${galleryItems.map(entry => `<figure class="gcircle"><figcaption>${escape(entry.title)}</figcaption></figure>`).join('')}</div><div class="strip"><div style="position:relative;z-index:2"><h2>Interested in ${escape(level.name)}?</h2><p>Book a tour or access the admission form to take the next step.</p><button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(level.name)}">Admissions</button></div></div><br><br><div class="panel"><p><a href="${__BASE ? __BASE + '/' : '/'}#levels" data-back-home class="btn btn-primary">Back to homepage</a></p></div>`)}${footer()}`;
+  
+  const isSchoolReadiness = level.name === 'School Readiness';
+
+  const overviewPanel = `<article class="panel" data-mobile-collapse${!isSchoolReadiness ? ' style="max-width: 760px; margin: 0 auto;"' : ''}><h3>Overview</h3><p>${escape(level.overview)}</p><h3 style="margin-top:20px">Age group</h3><p>${escape(level.age)}</p><h3 style="margin-top:20px">Timings</h3><p>${escape(level.timings)}</p><p style="text-align:center;color:var(--muted);margin-top:24px">All classes end at 12 noon on Friday.</p></article>`;
+  
+  const objectivesPanel = `<article class="panel" data-mobile-collapse><h3 style="margin-top:20px">Learning objectives</h3><ol>${level.objectives.map(item => `<li>${escape(item)}</li>`).join('')}</ol></article>`;
+
+  const topContent = isSchoolReadiness 
+    ? `<div class="two-col">${overviewPanel}${objectivesPanel}</div>`
+    : overviewPanel;
+
+  return `${hero(level.name.toUpperCase(), 'PROGRAMME', '', true, level.name)}${section(level.name, '', `${topContent}<div class="gallery" style="margin-top:34px">${galleryItems.map(entry => `<figure class="gcircle"><figcaption>${escape(entry.title)}</figcaption></figure>`).join('')}</div><div class="strip"><div style="position:relative;z-index:2"><h2>Interested in ${escape(level.name)}?</h2><p>Access the admission form to take the next step.</p><button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(level.name)}">Admissions</button></div></div><br><br><div class="panel"><p><a href="${homePath}#levels" data-back-home class="btn btn-primary">Back to homepage</a></p></div>`)}${footer()}`;
 }
 
     document.addEventListener('click', event => {
@@ -1194,49 +1310,39 @@ main section.pad .level:hover img{transform:scale(1.035)}
         event.preventDefault();
         lastHomeScroll = window.scrollY;
         sessionStorage.setItem('kindervale:lastHomeScroll', String(lastHomeScroll));
-        const href = route.getAttribute('href');
-        /* If __BASE is set, store the path minus __BASE so history is cleaner */
-        const pushPath = __BASE && href.startsWith(__BASE) ? href : href;
-        history.pushState({level: true}, '', pushPath);
+        history.pushState({level: true}, '', route.getAttribute('href'));
         render();
         return;
       }
       if (back) {
         event.preventDefault();
-        history.pushState({}, '', `${__BASE || ''}/#levels`);
-        render(undefined, {restoreScroll: true, instant: true});
+        history.pushState({}, '', `${homePath}#levels`);
+        render(location.pathname, {restoreScroll: true, instant: true});
         return;
       }
       if (scroll) {
         event.preventDefault();
         const hash = `#${scroll.dataset.scrollTarget}`;
-        /* check if on a level page or sub-path, go home first */
-        const cleanPath = (__BASE && location.pathname.startsWith(__BASE)) ? location.pathname.replace(__BASE, '') || '/' : location.pathname;
-        const isRoot = cleanPath === '/' || cleanPath === '/kindervale.html';
-        if (!isRoot) {
-          history.pushState({}, '', `${__BASE || ''}${hash}`);
-          render(undefined, {instant: true});
+        const clean = location.pathname.replace(/\/$/, '') || '/';
+        if (clean !== '/' && clean !== '/kindervale.html') {
+          history.pushState({}, '', `${homePath}${hash}`);
+          render(homePath, {instant: true});
         } else {
-          history.pushState({}, '', `${__BASE || ''}${hash}`);
+          history.pushState({}, '', `${homePath}${hash}`);
           scrollToHash(hash);
         }
       }
     });
-    window.addEventListener('popstate', () => {
-      const path = location.pathname;
-      const checkLevel = __BASE && path.startsWith(__BASE) ? path.replace(__BASE, '') : path;
-      render(path, {restoreScroll: !checkLevel.startsWith('/levels'), instant: true});
-    });
+    window.addEventListener('popstate', () => render(location.pathname, {restoreScroll: !location.pathname.startsWith('/levels'), instant: true}));
     window.addEventListener('scroll', updateNavbarState, {passive: true});
     window.addEventListener('resize', () => {
       updateNavbarState();
       applyMobileCollapse();
       refreshInfoCardHeights(site);
+      updateTeamMoreHeight(site);
     }, {passive: true});
     window.addEventListener('beforeunload', () => {
-      const path = location.pathname;
-      const checkLevel = __BASE && path.startsWith(__BASE) ? path.replace(__BASE, '') : path;
-      if (!checkLevel.startsWith('/levels')) sessionStorage.setItem('kindervale:lastHomeScroll', String(window.scrollY));
+      if (!location.pathname.startsWith('/levels')) sessionStorage.setItem('kindervale:lastHomeScroll', String(window.scrollY));
     });
     render(location.pathname, {instant: true});
   }
