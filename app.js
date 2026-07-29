@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const dataUrl = '/data/site.json';
+  const dataUrl = './data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
