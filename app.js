@@ -1,9 +1,15 @@
 (() => {
   'use strict';
 
-  const inSubFolder = location.pathname.includes('/levels/');
-  const homePath = inSubFolder ? '../../' : './';
-  const dataUrl = inSubFolder ? '../../data/site.json' : './data/site.json';
+  const getBasePath = () => {
+    let p = location.pathname;
+    p = p.replace(/\/levels\/.*$/, ''); // Strip virtual level routing
+    p = p.replace(/\/[^\/]+\.html$/, ''); // Strip index.html if present
+    if (!p.endsWith('/')) p += '/';
+    return p;
+  };
+  const homePath = getBasePath();
+  const dataUrl = homePath + 'data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -863,7 +869,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
     function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><h3 style="font-size:30px">Early Years Foundation Stage<br></h3><p>${escape(data.curriculum.summary)}</p></div><h2 style="font-size:31px; text-align:center;">Areas of Development</h2><br>${data.curriculum.areas.map((area, index) => `<div style="text-align:center;"><span>${[' ',' ',' ',' ',' ',' ',' '][index]}</span>${escape(area)}</div>`).join('')}`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="levels/${level.slug}/" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div>`, 'levels');
+      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="${homePath}levels/${level.slug}/" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
