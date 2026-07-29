@@ -1334,7 +1334,9 @@ function updateTeamMoreHeight(root = site) {
       const route = event.target.closest('a[data-route]');
       const scroll = event.target.closest('a[data-scroll-target]');
       const back = event.target.closest('a[data-back-home]');
+      
       if (event.ctrlKey || event.metaKey) return;
+      
       if (route) {
         event.preventDefault();
         lastHomeScroll = window.scrollY;
@@ -1343,22 +1345,28 @@ function updateTeamMoreHeight(root = site) {
         render();
         return;
       }
+      
       if (back) {
         event.preventDefault();
         history.pushState({}, '', `${homePath}#levels`);
         render(location.pathname, {restoreScroll: true, instant: true});
         return;
       }
+      
       if (scroll) {
         event.preventDefault();
         const hash = `#${scroll.dataset.scrollTarget}`;
         
-        if (location.pathname.includes('/levels/')) {
+        // Robust check: the 'about' section ONLY exists on the homepage.
+        // This makes the scroll immune to any GitHub Pages URL mismatches.
+        const isOnHomePage = !!document.getElementById('about');
+        
+        if (isOnHomePage) {
           history.pushState({}, '', `${homePath}${hash}`);
-          render(homePath, {instant: true});
+          scrollToHash(hash); // Smooth scroll to the section
         } else {
           history.pushState({}, '', `${homePath}${hash}`);
-          scrollToHash(hash);
+          render(homePath, {instant: true}); // Rebuild homepage and jump
         }
       }
     });
