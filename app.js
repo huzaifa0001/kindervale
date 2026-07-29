@@ -1352,8 +1352,8 @@ function updateTeamMoreHeight(root = site) {
       if (scroll) {
         event.preventDefault();
         const hash = `#${scroll.dataset.scrollTarget}`;
-        const clean = location.pathname.replace(/\/$/, '') || '/';
-        if (clean !== '/' && clean !== '/kindervale.html') {
+        
+        if (location.pathname.includes('/levels/')) {
           history.pushState({}, '', `${homePath}${hash}`);
           render(homePath, {instant: true});
         } else {
