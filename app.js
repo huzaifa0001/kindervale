@@ -1,11 +1,12 @@
 (() => {
   'use strict';
 
-  const dataUrl = './data/site.json';
+  const inSubFolder = location.pathname.includes('/levels/');
+  const homePath = inSubFolder ? '../../' : './';
+  const dataUrl = inSubFolder ? '../../data/site.json' : './data/site.json';
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const escape = (value) => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const homePath = location.pathname.endsWith('kindervale.html') ? location.pathname : '/';
   let activeObserver;
   let lastHomeScroll = Number(sessionStorage.getItem('kindervale:lastHomeScroll') || 0);
   let currentAdmissionSource = 'General Admissions';
@@ -73,6 +74,19 @@
     } catch (error) {
       console.info('Using bundled gallery data.');
     }
+    data.images.logo = homePath + data.images.logo.replace(/^\.\//, '');
+      data.images.founder = homePath + data.images.founder.replace(/^\.\//, '');
+      if (data.images.gallery) {
+        data.images.gallery.forEach(img => {
+          if (img.src) img.src = homePath + img.src.replace(/^\.\//, '');
+          if (img.thumbnail) img.thumbnail = homePath + img.thumbnail.replace(/^\.\//, '');
+        });
+      }
+      if (data.levels) {
+        data.levels.forEach(level => {
+          if (level.image) level.image = homePath + level.image.replace(/^\.\//, '');
+        });
+      }
     start(data);
   }).catch(error => console.error(error));
 
@@ -736,7 +750,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
     function hero(title = 'KINDERVALE', subtitle = 'PRESCHOOL', tag = 'Celebrating Childhood', admissionModal = false, admissionSource = 'General Admissions') {
       const admissionCta = admissionModal ? `<button type="button" class="btn btn-primary" data-open-admission data-admission-source="${escape(admissionSource)}">Admissions</button>` : hashLink('#admissions', 'Admissions', 'btn btn-primary');
       const tagContent = tag ? `<span class="ln"></span>${escape(tag)}<span class="ln"></span>` : '';
-      return `<header class="hero" id="home" height= 1500px><div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div><div class="hero-lockup"><img class="hero-birds" src="${data.images.logo}" alt="" width="120" height="120"><h1 class="brand-title">${escape(title)}</h1><div class="brand-sub">${escape(subtitle)}</div><div class="brand-tag">${tagContent}</div><div class="hero-cta">${admissionCta}</div></div><div class="wave"><img src="/clouds/cloud.png" alt="Decorative clouds" width=100% height=auto></div></header>`;} const sectionDecor = id => {
+      return `<header class="hero" id="home" height= 1500px><div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div></div><div class="hero-lockup"><img class="hero-birds" src="${data.images.logo}" alt="" width="120" height="120"><h1 class="brand-title">${escape(title)}</h1><div class="brand-sub">${escape(subtitle)}</div><div class="brand-tag">${tagContent}</div><div class="hero-cta">${admissionCta}</div></div><div class="wave"><img src="${homePath}clouds/cloud.png" alt="Decorative clouds" width=100% height=auto></div></header>`;} const sectionDecor = id => {
       const [topIcon, bottomIcon] = kvSectionIcons[id || ''] || kvSectionIcons[''];
       const topSvg = (kvIcons[topIcon] && kvIcons[topIcon]()) || '';
       const bottomSvg = (kvIcons[bottomIcon] && kvIcons[bottomIcon]()) || '';
@@ -840,7 +854,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
     function curriculum() { return section('Early Years Foundation Stage', 'Curriculum', `<div class="sec-head" data-mobile-collapse><h3 style="font-size:30px">Early Years Foundation Stage<br></h3><p>${escape(data.curriculum.summary)}</p></div><h2 style="font-size:31px; text-align:center;">Areas of Development</h2><br>${data.curriculum.areas.map((area, index) => `<div style="text-align:center;"><span>${[' ',' ',' ',' ',' ',' ',' '][index]}</span>${escape(area)}</div>`).join('')}`, 'curriculum'); }
     function levels() {
       const colours = ['#ff8a6b,#ffb199','#39c2b4,#6fd8cd','#ffd15c,#ffe08a','#8a7ff0,#afa6ff','#2e5a75,#3a6a86'];
-      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="/levels/${level.slug}" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div>`, 'levels');
+      return section('', 'Our Levels', `<div class="levels">${data.levels.map((level, i) => `<a href="levels/${level.slug}/" data-route class="level" aria-label="Explore ${escape(level.name)}" style="background:linear-gradient(135deg,${colours[i]})"><img src="${level.image}" alt="${escape(level.imageAlt || level.name)}" loading="lazy" decoding="async"><h3>${escape(level.name)}</h3></a>`).join('')}</div>`, 'levels');
     }
     function gallery() {
       const grouped = data.images.gallery.reduce((acc, entry) => {
@@ -942,7 +956,7 @@ main section.pad .level:hover img{transform:scale(1.035)}
     function render(path = location.pathname, options = {}) {
       if (activeObserver) activeObserver.disconnect();
       const clean = path === '/kindervale.html' ? '/' : path.replace(/\/$/, '') || '/';
-      const level = data.levels.find(item => `/levels/${item.slug}` === clean);
+      const level = data.levels.find(item => clean.endsWith(`/levels/${item.slug}`));
       const content = level ? levelPage(level) : home();
       setAdmissionSource(level ? level.name : 'General Admissions');
       site.innerHTML = `${header()}<main id="main-content" tabindex="-1">${content}</main>${admissionModal()}`;
